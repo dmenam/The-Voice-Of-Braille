@@ -2,6 +2,8 @@ package Ventanas;
 
 import Conexiones.FileManager;
 import Conexiones.Arduino;
+//import Conexiones.Voz;
+import com.panamahitek.ArduinoException;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -28,6 +30,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import jssc.SerialPortException;
 
 public class Inicio extends JFrame {
 
@@ -58,6 +61,8 @@ public class Inicio extends JFrame {
     private Configuracion configuracion;
     private Creditos creditos;
     private Ayuda ayuda;
+    
+    //private Voz voz;
 
     public Inicio() {
         //Tamaño de la pantalla
@@ -85,6 +90,11 @@ public class Inicio extends JFrame {
         manager = new FileManager();
         manager.setDirectorioPorDefecto(FileManager.leerConfiguracion(0));
         //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+        //Voz
+        if(FileManager.leerConfiguracion(3).equals("1")) {
+            //voz = new Voz(this);
+        }
+        //----------------------------------------------------------------------
 
         titulo = new JLabel("The Voice Of Braille");
         titulo.setSize((ventana.width * 60) / 100, (ventana.height * 15) / 100);
@@ -244,13 +254,19 @@ public class Inicio extends JFrame {
         scroll.setLocation(panel1.getWidth() * 2 / 100, panel1.getHeight() * 2 / 100);
         panel1.add(scroll);
 
-        btnLimpiar = new JButton("Limpiar");
+        btnLimpiar = new JButton("Enviar");
         btnLimpiar.setBounds(10, 10, panel1.getWidth() * 20 / 100, (panel1.getHeight() * 5) / 100);
         btnLimpiar.setLocation((panel1.getWidth() - btnLimpiar.getWidth()) * 2 / 100, (panel1.getHeight() - btnLimpiar.getHeight()) * 95 / 100);
         btnLimpiar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
-                System.out.println(manager.getDirectorioPorDefecto().toString());
+                try {
+                    ino.sendData(texto.getText());
+                } catch (ArduinoException ex) {
+                    Logger.getLogger(Inicio.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (SerialPortException ex) {
+                    Logger.getLogger(Inicio.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
         panel1.add(btnLimpiar);
@@ -260,7 +276,7 @@ public class Inicio extends JFrame {
         btnCancelar.setLocation((panel1.getWidth() - btnCancelar.getWidth()) * 30 / 100, (panel1.getHeight() - btnCancelar.getHeight()) * 95 / 100);
         panel1.add(btnCancelar);
 
-        btnImprimir = new JButton("Imprimir");
+        btnImprimir = new JButton("Recibir");
         btnImprimir.setBounds(10, 10, panel1.getWidth() * 20 / 100, (panel1.getHeight() * 5) / 100);
         btnImprimir.setLocation((panel1.getWidth() - btnImprimir.getWidth()) * 95 / 100, (panel1.getHeight() - btnImprimir.getHeight()) * 95 / 100);
         btnImprimir.addActionListener(new ActionListener() {
@@ -300,7 +316,11 @@ public class Inicio extends JFrame {
                 for (int x = 0; x < ino.getPortsAvailable(); x++) {
                     CBdispositivosBT.addItem(ino.getSerialPorts().get(x));
                 }
-                CBdispositivosBT.setSelectedItem(FileManager.leerConfiguracion(1));
+                if(CBdispositivosBT.getItemCount()>0)
+                {
+                    btnConectar.setEnabled(true);
+                    CBdispositivosBT.setSelectedItem(FileManager.leerConfiguracion(1));
+                }
             }
         });
         panel2.add(btnEscanear);
@@ -308,6 +328,7 @@ public class Inicio extends JFrame {
         btnConectar = new JButton("Conectar");
         btnConectar.setBounds(15, 15, panel2.getWidth() * 45 / 100, (panel2.getHeight() * 25) / 100);
         btnConectar.setLocation((panel2.getWidth() - btnConectar.getWidth()) * 95 / 100, (panel2.getHeight() - btnConectar.getHeight()) * 90 / 100);
+        btnConectar.setEnabled(false);
         btnConectar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {

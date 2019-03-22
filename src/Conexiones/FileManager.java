@@ -36,6 +36,13 @@ public class FileManager {
     private int ultimoc;
     //--------------------------------------------------------------------------
 
+    /*
+    * config[0] = Ruta de guardado predeterminada
+    * config[1] = puerto COM predeterminado
+    * config[2] = estado del bluetooth
+    * config[3] = comandos de voz (activado/desactivado)
+    */
+    
     public FileManager() {
         filter = new FileNameExtensionFilter("Archivos de TEXTO", "txt", "text");
         chooser = new JFileChooser();
@@ -93,7 +100,7 @@ public class FileManager {
         //descomposicion(true, datos);
         FileOutputStream outFileStream = new FileOutputStream(outFile);
         try (PrintWriter outStream = new PrintWriter(outFileStream)) {
-            outStream.print(documento);
+            outStream.print(datos);
         }
         /*try {
             fileWriter = new FileWriter(outFile);

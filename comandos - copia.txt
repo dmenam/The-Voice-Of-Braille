@@ -7,10 +7,18 @@ public <sentence> =
 [<dato2>]
 [<dato3>]
 [<dato4>]
+[<dato1><dato2><dato3><dato4>]
 [<dato5>]
 [<dato6>]
 [<dato7>]
-[<dato8>];
+[<dato8>]
+[<dato9>]
+[<dato10>]
+[<dato11>]
+[<dato12>]
+[<dato13>]
+[<dato14>]
+[<dato15>];
  
 <dato0>=Inicio;
 <dato1>=Encender impresora;
@@ -21,3 +29,10 @@ public <sentence> =
 <dato6>=Leer Texto;
 <dato7>=Ayuda;
 <dato8>=Salir;
+<dato9>=Toro;
+<dato10>=Vaca;
+<dato11>=Leche;
+<dato12>=Madriguera;
+<dato13>=Señor;
+<dato14>=Salir;
+<dato15>=1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 0 ;

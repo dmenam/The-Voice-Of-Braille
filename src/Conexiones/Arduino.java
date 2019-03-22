@@ -22,48 +22,36 @@ public final class Arduino extends PanamaHitek_Arduino {
         this.estado = false;
     }
 
-public void conectar(String puerto){
+    public void conectar(String puerto) {
         try {
             this.arduinoRXTX(puerto, BAUDIOS, new SerialPortEventListener() {
                 @Override
-        public void serialEvent(SerialPortEvent spe) {
+                public void serialEvent(SerialPortEvent spe) {
                     try {
                         dato = Arduino.this.printMessage();
                     } catch (SerialPortException | ArduinoException ex) {
-                        Logger.getLogger(Arduino
-
-.class  
-
-
-.getName()).log(Level.SEVERE, null, ex);
+                        Logger.getLogger(Arduino.class
+                                .getName()).log(Level.SEVERE, null, ex);
                     }
                 }
             });
             estado = true;
         } catch (ArduinoException ex) {
-            Logger.getLogger(Arduino
-
-.class  
-
-
-.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Arduino.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     }
 
-    public void enviarDato(String dato){
+    public void enviarDato(String dato) {
         try {
             this.sendData(dato);
         } catch (ArduinoException | SerialPortException ex) {
-            Logger.getLogger(Arduino
-
-.class  
-
-
-.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Arduino.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    public String getDato(){
+
+    public String getDato() {
         return dato;
     }
 
@@ -72,17 +60,13 @@ public void conectar(String puerto){
             Arduino.this.killArduinoConnection();
             estado = false;
         } catch (ArduinoException ex) {
-            Logger.getLogger(Arduino
-
-.class  
-
-
-.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Arduino.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    public boolean getEstado(){
+
+    public boolean getEstado() {
         return estado;
     }
-    
+
 }

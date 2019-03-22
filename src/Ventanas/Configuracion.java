@@ -2,6 +2,7 @@ package Ventanas;
 
 import Conexiones.Arduino;
 import Conexiones.FileManager;
+//import Conexiones.Voz;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;

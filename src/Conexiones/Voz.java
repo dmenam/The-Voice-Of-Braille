@@ -1,5 +1,7 @@
 package Conexiones;
-
+/*
+import Ventanas.Ayuda;
+import Ventanas.Inicio;
 import javax.speech.*;
 import javax.speech.recognition.*;
 import java.io.FileReader;
@@ -9,7 +11,33 @@ public class Voz extends ResultAdapter {
 
     static Recognizer recognizer;
     String gst;
+    private Inicio inicio;
 
+    public Voz(Inicio inicio) {
+        this.inicio = inicio;
+                try {
+            recognizer = Central.createRecognizer(new EngineModeDesc(Locale.ROOT));
+            recognizer.allocate();
+
+            FileReader grammar1 = new FileReader("comandos.txt");
+
+            RuleGrammar rg = recognizer.loadJSGF(grammar1);
+            rg.setEnabled(true);
+
+            recognizer.addResultListener(this);
+
+            System.out.println("Empieze Dictado");
+            recognizer.commitChanges();
+
+            recognizer.requestFocus();
+            recognizer.resume();
+        } catch (Exception e) {
+            System.out.println("Exception en " + e.toString());
+            e.printStackTrace();
+            System.exit(0);
+        }
+    }
+    
     @Override
     public void resultAccepted(ResultEvent re) {
         try {
@@ -24,9 +52,14 @@ public class Voz extends ResultAdapter {
                 System.out.print(gst + " ");
             }
             System.out.println();
-            if (gst.equals("cmop")) {
+            //------------------------------------------------------------------
+            if(gst.equals("Ayuda")) {
+                Ayuda a = new Ayuda(inicio);
+            }
+            //------------------------------------------------------------------
+            if (gst.equals("Salir")) {
                 recognizer.deallocate();
-                args[0] = "Hasta la proxima Cmop!";
+                args[0] = "Hasta la proxima!";
                 System.out.println(args[0]);
                 //Lee.main(args);
                 System.exit(0);
@@ -40,7 +73,7 @@ public class Voz extends ResultAdapter {
         }
     }
 
-    public static void main(String args[]) {
+    /*public void primero() {
         try {
             recognizer = Central.createRecognizer(new EngineModeDesc(Locale.ROOT));
             recognizer.allocate();
@@ -63,4 +96,4 @@ public class Voz extends ResultAdapter {
             System.exit(0);
         }
     }
-}
+}*/

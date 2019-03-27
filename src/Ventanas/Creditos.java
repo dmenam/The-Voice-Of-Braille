@@ -34,6 +34,7 @@ public class Creditos extends JDialog {
 
     public Creditos(JFrame frame) {
         super(frame, true);
+        setTitle("Creditos");
         //Icono
         setIconImage(new ImageIcon(getClass().getResource("../Imagenes/Icono_VoB.png")).getImage());
         //Tamaño de la pantalla

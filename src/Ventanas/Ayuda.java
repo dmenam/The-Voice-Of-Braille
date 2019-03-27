@@ -24,6 +24,7 @@ public class Ayuda extends JDialog{
    
     public Ayuda(JFrame frame){
         super(frame, true);
+        setTitle("Ayuda");
         //Icono
         setIconImage(new ImageIcon(getClass().getResource("../Imagenes/Icono_VoB.png")).getImage());
         //Tamaño de la pantalla

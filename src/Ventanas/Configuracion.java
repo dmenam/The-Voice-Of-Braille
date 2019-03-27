@@ -29,10 +29,10 @@ public class Configuracion extends JDialog {
     private boolean conexionImpresora;
 
     private JPanel panel;
-    
+
     private JLabel JLbluetooth, JLbluetoothCOM, JLcomandos, JLrutaGuardado;
     private JLabel fondo;
-    
+
     private JComboBox puertosCOM;
 
     private JButton btnSalir;
@@ -44,27 +44,29 @@ public class Configuracion extends JDialog {
     private JToggleButton btnBluetooth;
 
     private JTextField ruta;
-    
+
     private FileManager manager;
     private Arduino ino;
-    
+
     private String[] config;
+
     /*
     * config[0] = Ruta de guardado predeterminada
     * config[1] = puerto COM predeterminado
     * config[2] = estado del bluetooth
     * config[3] = comandos de voz (activado/desactivado)
-    */
+     */
 
     public Configuracion(JFrame frame, FileManager manager, Arduino ino) {
         super(frame, true);
+        setTitle("Configuración");
         //Manejador de Archivos.
         this.manager = manager;
         //Arduino
         this.ino = ino;
         //Arreglo de la configuracion
         config = new String[4];
-        
+
         //Icono
         setIconImage(new ImageIcon(getClass().getResource("../Imagenes/Icono_VoB.png")).getImage());
         //Tamaño de la pantalla
@@ -83,13 +85,12 @@ public class Configuracion extends JDialog {
         setVisible(true);
     }
 
-
     public boolean cambiarEstadoComandos() {
         return true;
     }
 
     private void inicializarComponentes(Dimension ventana) {
-        
+
         panel = new JPanel();
         panel.setBounds(10, 10, (ventana.width * 85) / 100, (ventana.height * 75) / 100);
         panel.setLocation((ventana.width - panel.getWidth()) * 50 / 100, (ventana.height - panel.getHeight()) * 10 / 100);
@@ -157,8 +158,7 @@ public class Configuracion extends JDialog {
             }
         });
         panel.add(puertosCOM);
-        
-        
+
         JLbluetooth = new JLabel("Bluetooth");
         JLbluetooth.setBounds(10, 10, panel.getWidth(), panel.getHeight() * 10 / 100);
         JLbluetooth.setFont(new Font("Times New Roman", Font.PLAIN, 22));
@@ -170,20 +170,18 @@ public class Configuracion extends JDialog {
         btnBluetooth.setBounds(10, 10, panel.getWidth() * 30 / 100, panel.getHeight() * 10 / 100);
         btnBluetooth.setLocation((panel.getWidth() - btnBluetooth.getWidth()) * 60 / 100, (panel.getHeight() - btnBluetooth.getHeight()) * 65 / 100);
         //Seleccion de la informacion de acuerdo a un archivo de configuraciones
-        if(FileManager.leerConfiguracion(2).equals("1"))
-        {
+        if (FileManager.leerConfiguracion(2).equals("1")) {
             btnBluetooth.setSelected(true);
             btnBluetooth.setText("ACTIVADO");
             config[2] = "1";
         }
-        if(FileManager.leerConfiguracion(2).equals("0"))
-        {
+        if (FileManager.leerConfiguracion(2).equals("0")) {
             btnBluetooth.setSelected(false);
             btnBluetooth.setText("DESACTIVADO");
             config[2] = "0";
         }
         //----------------------------------------------------------------------
-        
+
         btnBluetooth.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
@@ -212,17 +210,15 @@ public class Configuracion extends JDialog {
         btnComandos.setBounds(10, 10, panel.getWidth() * 30 / 100, panel.getHeight() * 10 / 100);
         btnComandos.setLocation((panel.getWidth() - btnComandos.getWidth()) * 60 / 100, (panel.getHeight() - btnComandos.getHeight()) * 85 / 100);
         //Seleccion de la informacion de acuerdo a un archivo de configuraciones
-        if(FileManager.leerConfiguracion(3).equals("1"))
-        {
+        if (FileManager.leerConfiguracion(3).equals("1")) {
             btnComandos.setSelected(true);
             btnComandos.setText("ACTIVADO");
-            config[3] =  "1";
+            config[3] = "1";
         }
-        if(FileManager.leerConfiguracion(3).equals("0"))
-        {
+        if (FileManager.leerConfiguracion(3).equals("0")) {
             btnComandos.setSelected(false);
             btnComandos.setText("DESACTIVADO");
-            config[3] =  "0";
+            config[3] = "0";
         }
         //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
         btnComandos.addActionListener(new ActionListener() {
@@ -230,7 +226,7 @@ public class Configuracion extends JDialog {
             public void actionPerformed(ActionEvent ae) {
                 if (btnComandos.isSelected()) {
                     btnComandos.setText("ACTIVADO");
-                    config[3] =  "1";
+                    config[3] = "1";
                     btnAplicar.setEnabled(true);
                 } else {
                     btnComandos.setText("DESACTIVADO");
@@ -241,17 +237,22 @@ public class Configuracion extends JDialog {
         });
         btnComandos.setFont(new Font("Times New Roman", Font.PLAIN, 22));
         panel.add(btnComandos);
-        
+
         btnAplicar = new JButton("Aplicar");
         btnAplicar.setBounds(10, 10, panel.getWidth() * 20 / 100, panel.getHeight() * 10 / 100);
         btnAplicar.setLocation((ventana.width - btnAplicar.getWidth()) * 80 / 100, (ventana.height - btnAplicar.getHeight()) * 90 / 100);
         btnAplicar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
-                config[1] = puertosCOM.getSelectedItem().toString();
-                FileManager.escribirConfiguracion(config);
-                btnAplicar.setEnabled(false);
-                btnAceptar.setEnabled(true);
+                if (puertosCOM.getItemCount() > 0) {
+                    config[1] = puertosCOM.getSelectedItem().toString();
+                }
+                else {
+                    config[1] = FileManager.leerConfiguracion(1);
+                }
+                    FileManager.escribirConfiguracion(config);
+                    btnAplicar.setEnabled(false);
+                    btnAceptar.setEnabled(true);
             }
         });
         btnAplicar.setEnabled(false);
@@ -263,15 +264,12 @@ public class Configuracion extends JDialog {
         btnSalir.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
-                if(btnAplicar.isEnabled())
-                {
+                if (btnAplicar.isEnabled()) {
                     int resp = JOptionPane.showConfirmDialog(null, "¿Desea Guardar los cambios realizados?");
-                    if(resp == JOptionPane.YES_OPTION)
-                    {
+                    if (resp == JOptionPane.YES_OPTION) {
                         FileManager.escribirConfiguracion(config);
                     }
-                    if(resp == JOptionPane.NO_OPTION)
-                    {
+                    if (resp == JOptionPane.NO_OPTION) {
                         dispose();
                     }
                 } else {
@@ -304,13 +302,12 @@ public class Configuracion extends JDialog {
         fondo.setIcon(iconoFondo);
         getContentPane().add(fondo);
     }
-    
-    public Configuracion getMe(){
+
+    public Configuracion getMe() {
         return this;
     }
-    
-    
-    public FileManager getFileManager(){
+
+    public FileManager getFileManager() {
         return manager;
-    } 
+    }
 }

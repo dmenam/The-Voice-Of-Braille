@@ -12,6 +12,8 @@ import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -30,6 +32,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.KeyStroke;
 import jssc.SerialPortException;
 
 public class Inicio extends JFrame {
@@ -109,7 +112,7 @@ public class Inicio extends JFrame {
         //Menu de archivos
         Marchivo = new JMenu("Archivo");
         //SubMenus
-        MInuevo = new JMenuItem("Nuevo Archivo...");
+        MInuevo = new JMenuItem("Nuevo Archivo...          ");
         MInuevo.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
@@ -126,6 +129,7 @@ public class Inicio extends JFrame {
 
             }
         });
+        MInuevo.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, InputEvent.CTRL_MASK));
         Marchivo.add(MInuevo);
         //---------------------------------------------------------------------//
         MIabrir = new JMenuItem("Abrir Archivo...");
@@ -143,6 +147,7 @@ public class Inicio extends JFrame {
                 }
             }
         });
+        MIabrir.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, InputEvent.CTRL_MASK));
         Marchivo.add(MIabrir);
         //---------------------------------------------------------------------//
         MIguardar = new JMenuItem("Guardar");
@@ -170,6 +175,7 @@ public class Inicio extends JFrame {
                 }
             }
         });
+        MIguardar.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_MASK));
         Marchivo.add(MIguardar);
         //---------------------------------------------------------------------//
         MIguardarC = new JMenuItem("Guardar Como...");
@@ -194,7 +200,7 @@ public class Inicio extends JFrame {
         //Menu de Configuracion
         Mconfiguracion = new JMenu("Configuracion");
         //SubMenus
-        MIopciones = new JMenuItem("Opciones");
+        MIopciones = new JMenuItem("Opciones      ");
         MIopciones.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
@@ -218,7 +224,7 @@ public class Inicio extends JFrame {
         });
         Mayuda.add(MIAyuda);
         //---------------------------------------------------------------------//
-        MIcreditos = new JMenuItem("Creditos de la aplicación");
+        MIcreditos = new JMenuItem("Creditos de la aplicación     ");
         MIcreditos.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {

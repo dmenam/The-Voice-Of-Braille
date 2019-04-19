@@ -15,12 +15,20 @@ import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
 public class Ayuda extends JDialog{
     
     private JLabel titulo;
+    private JLabel tituloComandos;
     private JLabel fondo;
     
     private JTextArea txtComandos;
     
-    private String comandos = "Comandos Disponibles:\n"
-            + "";
+    private String tituloC = "Comandos disponibles";
+    private String comandos = "INICIO: Abre la ventana principal.\n"
+            + "ENCENDER IMPRESORA: Enciende la impresora. \n"
+            + "APAGAR IMPRESORA: Apaga la impresora. \n"
+            + "IMPRIMIR: Manda a immprimir el texto a la impresora. \n"
+            + "CANCELAR: Cierra la ventana.  \n"
+            + "GUARDAR: Guarda el archivo actual. \n"
+            + "AYUDA: Abre la ventana de Ayuda. \n"
+            + "SALIR: Finaliza la ejecucion del programa. \n";
    
     public Ayuda(JFrame frame){
         super(frame, true);
@@ -52,10 +60,18 @@ public class Ayuda extends JDialog{
         titulo.setLocation((ventana.width - titulo.getWidth()) / 2, (ventana.height - titulo.getHeight()) * 5 / 100);
         getContentPane().add(titulo);
         
+        tituloComandos = new JLabel();
+        tituloComandos.setBounds(10, 10, ventana.width * 95 / 100, ventana.height * 5 / 100);
+        tituloComandos.setFont(new Font("Times New Roman", Font.BOLD, 38));
+        tituloComandos.setLocation((ventana.width - tituloComandos.getWidth()) / 2, (ventana.height - tituloComandos.getHeight()) * 15 / 100);
+        tituloComandos.setOpaque(false);
+        tituloComandos.setText(tituloC);
+        getContentPane().add(tituloComandos);
+        
         txtComandos = new JTextArea();
-        txtComandos.setBounds(10, 10, ventana.width * 95 / 100, ventana.height * 80 / 100);
-        txtComandos.setFont(new Font("Times New Roman", Font.BOLD, 38));
-        txtComandos.setLocation((ventana.width - txtComandos.getWidth()) / 2, (ventana.height - txtComandos.getHeight()) * 70 / 100);
+        txtComandos.setBounds(10, 10, ventana.width * 95 / 100, ventana.height * 75 / 100);
+        txtComandos.setFont(new Font("Times New Roman", Font.PLAIN, 28));
+        txtComandos.setLocation((ventana.width - txtComandos.getWidth()) / 2, (ventana.height - txtComandos.getHeight()) * 95 / 100);
         txtComandos.setEditable(false);
         txtComandos.setOpaque(false);
         txtComandos.setText(comandos);

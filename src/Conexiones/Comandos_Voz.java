@@ -1,5 +1,5 @@
 package Conexiones;
-/*
+
 import Ventanas.Ayuda;
 import Ventanas.Inicio;
 import javax.speech.*;
@@ -7,13 +7,13 @@ import javax.speech.recognition.*;
 import java.io.FileReader;
 import java.util.Locale;
 
-public class Voz extends ResultAdapter {
+public class Comandos_Voz extends ResultAdapter {
 
     static Recognizer recognizer;
     String gst;
     private Inicio inicio;
 
-    public Voz(Inicio inicio) {
+    public Comandos_Voz(Inicio inicio) {
         this.inicio = inicio;
                 try {
             recognizer = Central.createRecognizer(new EngineModeDesc(Locale.ROOT));
@@ -53,8 +53,76 @@ public class Voz extends ResultAdapter {
             }
             System.out.println();
             //------------------------------------------------------------------
+            if(gst.equals("Inicio")) {
+                if(inicio.getAyuda() != null) {
+                    inicio.cerrarAyuda();
+                }
+                if(inicio.getConfiguracion()!= null) {
+                    inicio.cerrarConfiguracion();
+                }
+                if(inicio.getCreditos()!= null) {
+                    inicio.cerrarCreditos();
+                }
+            } else {
+                recognizer.suspend();
+                //Lee.main(args);
+                recognizer.resume();
+            }
+            //------------------------------------------------------------------
+            if(gst.equals("Encender impresora")) {
+                
+            } else {
+                recognizer.suspend();
+                //Lee.main(args);
+                recognizer.resume();
+            }
+            //------------------------------------------------------------------
+            if(gst.equals("Apagar Impresora")) {
+                
+            } else {
+                recognizer.suspend();
+                //Lee.main(args);
+                recognizer.resume();
+            }
+            //------------------------------------------------------------------
+            if(gst.equals("Imprimir")) {
+                
+            }
+            //------------------------------------------------------------------
+            if(gst.equals("Cancelar")) {
+                
+            } else {
+                recognizer.suspend();
+                //Lee.main(args);
+                recognizer.resume();
+            }
+            //------------------------------------------------------------------
+            if(gst.equals("Guardar")) {
+                
+            } else {
+                recognizer.suspend();
+                //Lee.main(args);
+                recognizer.resume();
+            }
+            //------------------------------------------------------------------
+            if(gst.equals("Leer Texto")) {
+                
+            } else {
+                recognizer.suspend();
+                //Lee.main(args);
+                recognizer.resume();
+            }
+            //------------------------------------------------------------------
             if(gst.equals("Ayuda")) {
-                Ayuda a = new Ayuda(inicio);
+                if(inicio.getAyuda() == null) {
+                    Ayuda a = new Ayuda(inicio);
+                } else {
+                    inicio.cerrarAyuda();
+                }
+            } else {
+                recognizer.suspend();
+                //Lee.main(args);
+                recognizer.resume();
             }
             //------------------------------------------------------------------
             if (gst.equals("Salir")) {
@@ -68,6 +136,7 @@ public class Voz extends ResultAdapter {
                 //Lee.main(args);
                 recognizer.resume();
             }
+            //------------------------------------------------------------------
         } catch (Exception ex) {
             System.out.println("Ha ocurrido algo inesperado " + ex);
         }
@@ -83,7 +152,7 @@ public class Voz extends ResultAdapter {
             RuleGrammar rg = recognizer.loadJSGF(grammar1);
             rg.setEnabled(true);
 
-            recognizer.addResultListener(new Voz());
+            recognizer.addResultListener(new Comandos_Voz());
 
             System.out.println("Empieze Dictado");
             recognizer.commitChanges();
@@ -95,5 +164,5 @@ public class Voz extends ResultAdapter {
             e.printStackTrace();
             System.exit(0);
         }
-    }
-}*/
+    }*/
+}

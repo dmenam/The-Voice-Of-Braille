@@ -2,6 +2,7 @@ package Ventanas;
 
 import Conexiones.FileManager;
 import Conexiones.Arduino;
+import Conexiones.Braille;
 //import Conexiones.Voz;
 import com.panamahitek.ArduinoException;
 
@@ -29,11 +30,11 @@ import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.KeyStroke;
-import jssc.SerialPortException;
 
 public class Inicio extends JFrame {
 
@@ -46,6 +47,7 @@ public class Inicio extends JFrame {
     private JTextArea texto;
 
     private Arduino ino;
+    private Braille braille;
 
     private FileManager manager;
     private File archivo;
@@ -64,9 +66,8 @@ public class Inicio extends JFrame {
     private Configuracion configuracion;
     private Creditos creditos;
     private Ayuda ayuda;
-    
-    //private Voz voz;
 
+    //private Voz voz;
     public Inicio() {
         //Tamaño de la pantalla
         Dimension pantalla;
@@ -89,14 +90,14 @@ public class Inicio extends JFrame {
     }
 
     private void inicializar(Dimension ventana) {
-        //Manager de Archivos
+        //Manager de Archivos---------------------------------------------------
         manager = new FileManager();
         manager.setDirectorioPorDefecto(FileManager.leerConfiguracion(0));
-        //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-        //Voz
-        if(FileManager.leerConfiguracion(3).equals("1")) {
-            //voz = new Voz(this);
-        }
+        //Braille---------------------------------------------------------------
+        braille = new Braille();
+        //----------------------------------------------------------------------  
+        //Arduino
+        ino = new Arduino();
         //----------------------------------------------------------------------
 
         titulo = new JLabel("The Voice Of Braille");
@@ -116,17 +117,7 @@ public class Inicio extends JFrame {
         MInuevo.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
-                try {
-                    manager.guardarArchivoComo("");
-                    archivo = manager.getArchivo();
-                    if(archivo != null)
-                    {
-                        setTitle("The Voice of Braille - " + archivo.getName());
-                    }
-                } catch (IOException ex) {
-                    Logger.getLogger(Inicio.class.getName()).log(Level.SEVERE, null, ex);
-                }
-
+                nuevoArchivo();
             }
         });
         MInuevo.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, InputEvent.CTRL_MASK));
@@ -136,15 +127,7 @@ public class Inicio extends JFrame {
         MIabrir.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
-                try {
-                    archivo = manager.abrirAchivo();
-                    if(archivo != null) {
-                        setTitle("The Voice of Braille - " + archivo.getName());
-                        texto.setText(manager.leerArchivo(archivo));
-                    }
-                } catch (IOException ex) {
-                    Logger.getLogger(Inicio.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                abrirArchivo();
             }
         });
         MIabrir.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, InputEvent.CTRL_MASK));
@@ -154,25 +137,7 @@ public class Inicio extends JFrame {
         MIguardar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
-                if (archivo != null) {
-                    try {
-                        manager.guardarArchivo(archivo.getAbsolutePath(), texto.getText());
-                        archivo = manager.getArchivo();
-                        setTitle("The Voice of Braille - " + archivo.getName());
-                    } catch (IOException ex) {
-                        Logger.getLogger(Inicio.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                } else {
-                    try {
-                        manager.guardarArchivoComo(texto.getText());
-                        archivo = manager.getArchivo();
-                        if(archivo != null){
-                            setTitle("The Voice of Braille - " + archivo.getName());
-                        }
-                    } catch (IOException ex) {
-                        Logger.getLogger(Inicio.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                }
+                guardarArchivo();
             }
         });
         MIguardar.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_MASK));
@@ -182,15 +147,7 @@ public class Inicio extends JFrame {
         MIguardarC.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
-                try {
-                    manager.guardarArchivoComo(texto.getText());
-                    archivo = manager.getArchivo();
-                    if(archivo != null){
-                        setTitle("The Voice of Braille - " + archivo.getName());
-                    }
-                } catch (IOException ex) {
-                    Logger.getLogger(Inicio.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                guardarArchivoComo();
             }
         });
         Marchivo.add(MIguardarC);
@@ -204,7 +161,7 @@ public class Inicio extends JFrame {
         MIopciones.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
-                configuracion = new Configuracion(Inicio.this.getMe(),manager, ino);
+                configuracion = new Configuracion(Inicio.this.getMe(), manager, ino);
             }
         });
         Mconfiguracion.add(MIopciones);
@@ -219,7 +176,7 @@ public class Inicio extends JFrame {
         MIAyuda.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
-                ayuda = new Ayuda(Inicio.this.getMe());
+                Inicio.this.ayuda = new Ayuda(Inicio.this.getMe());
             }
         });
         Mayuda.add(MIAyuda);
@@ -228,7 +185,7 @@ public class Inicio extends JFrame {
         MIcreditos.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
-                creditos = new Creditos(Inicio.this.getMe());
+                Inicio.this.creditos = new Creditos(Inicio.this.getMe());
             }
         });
         Mayuda.add(MIcreditos);
@@ -247,10 +204,6 @@ public class Inicio extends JFrame {
         panel1.setBackground(Color.DARK_GRAY);
         panel1.setLayout(null);
 
-        //Arduino
-        ino = new Arduino();
-        //----------------------------------------------------------------------
-
         texto = new JTextArea();
         texto.setLineWrap(true);
         texto.setWrapStyleWord(true);
@@ -260,18 +213,21 @@ public class Inicio extends JFrame {
         scroll.setLocation(panel1.getWidth() * 2 / 100, panel1.getHeight() * 2 / 100);
         panel1.add(scroll);
 
-        btnLimpiar = new JButton("Enviar");
+        btnLimpiar = new JButton("Limpiar");
         btnLimpiar.setBounds(10, 10, panel1.getWidth() * 20 / 100, (panel1.getHeight() * 5) / 100);
         btnLimpiar.setLocation((panel1.getWidth() - btnLimpiar.getWidth()) * 2 / 100, (panel1.getHeight() - btnLimpiar.getHeight()) * 95 / 100);
         btnLimpiar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
-                try {
-                    ino.sendData(texto.getText());
-                } catch (ArduinoException ex) {
-                    Logger.getLogger(Inicio.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (SerialPortException ex) {
-                    Logger.getLogger(Inicio.class.getName()).log(Level.SEVERE, null, ex);
+                if (!texto.getText().isEmpty()) {
+                    int opc = JOptionPane.showConfirmDialog(getMe(), "¿Desea guardar el documento?",
+                            "¿Desea eliminar el texto sin guardarlo?", JOptionPane.YES_NO_OPTION);
+                    if (opc == JOptionPane.YES_OPTION) {
+                        guardarArchivo();
+                        archivo = null;
+                        setTitle("The Voice of Braille");
+                    }
+                    texto.setText("");
                 }
             }
         });
@@ -282,13 +238,13 @@ public class Inicio extends JFrame {
         btnCancelar.setLocation((panel1.getWidth() - btnCancelar.getWidth()) * 30 / 100, (panel1.getHeight() - btnCancelar.getHeight()) * 95 / 100);
         panel1.add(btnCancelar);
 
-        btnImprimir = new JButton("Recibir");
+        btnImprimir = new JButton("Imprimir");
         btnImprimir.setBounds(10, 10, panel1.getWidth() * 20 / 100, (panel1.getHeight() * 5) / 100);
         btnImprimir.setLocation((panel1.getWidth() - btnImprimir.getWidth()) * 95 / 100, (panel1.getHeight() - btnImprimir.getHeight()) * 95 / 100);
         btnImprimir.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
-                texto.append(ino.getDato());
+                braille.imprimirBraille(texto.getText(), 36);
             }
         });
         panel1.add(btnImprimir);
@@ -308,6 +264,8 @@ public class Inicio extends JFrame {
         BTdispositivo.setLocation((panel2.getWidth() - BTdispositivo.getWidth()) * 10 / 100, (panel2.getHeight() - BTdispositivo.getHeight()) * 35 / 100);
         panel2.add(BTdispositivo);
 
+        //GraphicsEnvironment environment = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        //String []fuentes= environment.getAvailableFontFamilyNames();
         CBdispositivosBT = new JComboBox();
         CBdispositivosBT.setBounds(15, 15, panel2.getWidth() * 60 / 100, (panel2.getHeight() * 25) / 100);
         CBdispositivosBT.setLocation((panel2.getWidth() - CBdispositivosBT.getWidth()) * 90 / 100, (panel2.getHeight() - CBdispositivosBT.getHeight()) * 35 / 100);
@@ -322,8 +280,7 @@ public class Inicio extends JFrame {
                 for (int x = 0; x < ino.getPortsAvailable(); x++) {
                     CBdispositivosBT.addItem(ino.getSerialPorts().get(x));
                 }
-                if(CBdispositivosBT.getItemCount()>0)
-                {
+                if (CBdispositivosBT.getItemCount() > 0) {
                     btnConectar.setEnabled(true);
                     CBdispositivosBT.setSelectedItem(FileManager.leerConfiguracion(1));
                 }
@@ -341,10 +298,12 @@ public class Inicio extends JFrame {
                 if (btnConectar.getText().equals("Conectar")) {
                     ino.conectar(CBdispositivosBT.getSelectedItem().toString());
                     if (ino != null) {
+                        braille.setArduino(ino);
                         JLestado.setText("Estado: Conectado");
                         btnConectar.setText("Desconectar");
                     }
                 } else {
+                    braille.setArduino(null);
                     ino.finalizarConexion();
                     btnConectar.setText("Conectar");
                     JLestado.setText("Estado: Desconectado");
@@ -378,5 +337,92 @@ public class Inicio extends JFrame {
 
     public void setTexto(String texto) {
         this.texto.append(texto);
+    }
+
+    public String getTexto() {
+        return this.texto.getText();
+    }
+
+    public Configuracion getConfiguracion() {
+        return this.configuracion;
+    }
+
+    public Ayuda getAyuda() {
+        return this.ayuda;
+    }
+
+    public Creditos getCreditos() {
+        return this.creditos;
+    }
+
+    public void cerrarConfiguracion() {
+        this.configuracion.dispose();
+    }
+
+    public void cerrarAyuda() {
+        this.ayuda.dispose();
+    }
+
+    public void cerrarCreditos() {
+        this.creditos.dispose();
+    }
+
+    public void abrirArchivo() {
+        try {
+            archivo = manager.abrirAchivo();
+            if (archivo != null) {
+                setTitle("The Voice of Braille - " + archivo.getName());
+                texto.setText(manager.leerArchivo(archivo));
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(Inicio.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void guardarArchivo() {
+        if (archivo != null) {
+            try {
+                manager.guardarArchivo(archivo.getAbsolutePath(), texto.getText());
+                archivo = manager.getArchivo();
+                setTitle("The Voice of Braille - " + archivo.getName());
+            } catch (IOException ex) {
+                Logger.getLogger(Inicio.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } else {
+            try {
+                manager.guardarArchivoComo(texto.getText());
+                archivo = manager.getArchivo();
+                if (archivo != null) {
+                    setTitle("The Voice of Braille - " + archivo.getName());
+                }
+            } catch (IOException ex) {
+                Logger.getLogger(Inicio.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+
+    public void guardarArchivoComo() {
+        try {
+            manager.guardarArchivoComo(texto.getText());
+            archivo = manager.getArchivo();
+            if (archivo != null) {
+                setTitle("The Voice of Braille - " + archivo.getName());
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(Inicio.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void nuevoArchivo() {
+        try {
+            manager.guardarArchivoComo("");
+            archivo = manager.getArchivo();
+            if (archivo != null) {
+                setTitle("The Voice of Braille - " + archivo.getName());
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(Inicio.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
     }
 }

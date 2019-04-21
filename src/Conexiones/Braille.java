@@ -14,28 +14,28 @@ public class Braille {
         "01"};//46
 
     private final String[] a = {"10",
-        "00",
-        "00"};//1
+                                "00",
+                                "00"};//1
 
     private final String[] b = {"10",
-        "10",
-        "00"};//12
+                                "10",
+                                "00"};//12
 
     private final String[] c = {"11",
-        "00",
-        "00"};//14
+                                "00",
+                                "00"};//14
 
-    private final String[] d = {"01",
-        "10",
-        "10"};//145
+    private final String[] d = {"11",
+                                "01",
+                                "00"};//145
 
     private final String[] e = {"10",
-        "01",
-        "00"};//15
+                                "01",
+                                "00"};//15
 
     private final String[] f = {"11",
-        "10",
-        "00"};//124
+                                "10",
+                                 "00"};//124
 
     private final String[] g = {"11",
         "11",
@@ -209,131 +209,162 @@ public class Braille {
     }
 
     public void imprimirBraille(String texto, int cantCaracteres) {
-
         String[] result = texto.split("(?<=\\G.{" + cantCaracteres + "})");
-        int error = 0;
-        for (int j = 0; j < result.length; j++) { //Cuantos resultados hubo de la fraacion en X caracteres                   
+        char letra;
+        int tiempo = 500;
+        int k;
+        for (int j = 0; j < result.length; j++) { //Cuantos resultados hubo de la fracion en X caracteres                   
+            //for (int i = 0; i < 2; i++) {
             for (int i = 0; i < 3; i++) {//Recorrido de cada punto de la letras en braille
-                for (int k = 0; k < result[j].length(); k++) {//Conversion de letra por letra en el renglon especificado
+                for (k = 0; k < result[j].length(); k++) {//Conversion de letra por letra en el renglon especificado
                     //for (char c : result[j].toCharArray()) {
-                    char letra = result[j].charAt(k); //En el renglon[j] leer el caracter numero K
-                    //try {
-                        //System.out.print(convierte(letra, i, 0)); //i es el punto en braille en la columna 0
-                        //Thread.sleep(1000);
-                        //System.out.print(convierte(letra, i, 1) + " ");// punto de braille en la columna 1
-                        //Thread.sleep(1000);
-                    //} catch (InterruptedException ex) {
-                        //Logger.getLogger(Braille.class.getName()).log(Level.SEVERE, null, ex);
-                    //}
-                    if (this.ino != null) {
-                        try {
+                    letra = result[j].charAt(k); //En el renglon[j] leer el caracter numero K
+                    //if (this.ino != null) {
+                    try {
+                        
+                        if (Character.isDigit(letra)) {
+                            System.out.print(convierteNumero(letra, i, 0));
+                            Thread.sleep(tiempo);
+                            enviarDato(convierteNumero(letra, i, 0));
+                            Thread.sleep(tiempo);
+                            System.out.print(convierteNumero(letra, i, 1));
+                            enviarDato(convierteNumero(letra, i, 1));
+                            Thread.sleep(tiempo);
+                            System.out.print(" ");
+                        }
+                        if (Character.isUpperCase(letra)) {
+                            //Impresion del simbolo de mayuscula
+                            System.out.print(convierteMayuscula(i, 0));
+                            Thread.sleep(tiempo);
+                            enviarDato(convierteMayuscula(i, 0));
+                            Thread.sleep(tiempo);
+
+                            System.out.print(convierteMayuscula(i, 1));
+                            enviarDato(convierteMayuscula(i, 1));
+                            Thread.sleep(tiempo);
+
+                            System.out.print(" ");
+                            //Letra en minuscula
+                            letra = Character.toLowerCase(letra);
+
                             System.out.print(convierte(letra, i, 0)); //i es el punto en braille en la columna 0
                             enviarDato(convierte(letra, i, 0));
-                            Thread.sleep(500);
+                            Thread.sleep(tiempo);
+
                             System.out.print(convierte(letra, i, 1) + " ");// punto de braille en la columna 1
                             enviarDato(convierte(letra, i, 1));
-                            Thread.sleep(500);
-                        } catch (InterruptedException ex) {
-                            Logger.getLogger(Braille.class.getName()).log(Level.SEVERE, null, ex);
-                        }
-                    }
+                            Thread.sleep(tiempo);
+                        } else {
+                            System.out.print(convierte(letra, i, 0)); //i es el punto en braille en la columna 0
+                            enviarDato(convierte(letra, i, 0));
+                            Thread.sleep(tiempo);
 
+                            System.out.print(convierte(letra, i, 1) + " ");// punto de braille en la columna 1
+                            enviarDato(convierte(letra, i, 1));
+                            Thread.sleep(tiempo);
+                        }
+
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(Braille.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    //}
                 }
-                System.out.println("");//Reglon de letra (despues de 2 puntitos)
+                System.out.println("prro");//Reglon de palabra (despues de todo el primer conjunto de puntos pasa al siguiente
+                if (this.ino != null) {
+                    try {
+                        enviarDato("2");
+                        Thread.sleep(tiempo);
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(Braille.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                if (i == 0) {
+                    k = volverAtras(k, j, i + 1, result);
+                    System.out.println("prro");//Reglon de palabra (despues de todo el primer conjunto de puntos pasa al siguiente
+                    if (this.ino != null) {
+                        try {
+                        enviarDato("2");
+                        Thread.sleep(tiempo);
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(Braille.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    }
+                    i++;
+                }
             }
-            System.out.println("");//Renglon de palabra la palabra
-            if (this.ino != null) {
-                enviarDato("2");
+            System.out.println("");//Renglon de conjunto de X caracteres
+        }
+        enviarDato("5");
+    }
+
+    private int volverAtras(int k, int j, int i, String[] result) {
+        int tiempo = 500;
+        char letra;
+        for (k = k - 1; k >= 0; k--) {
+            try {
+                letra = result[j].charAt(k); //En el renglon[j] leer el caracter numero K
+                if (Character.isDigit(letra)) {
+                    System.out.print(convierteNumero(letra, i, 1));
+                    enviarDato(convierteNumero(letra, i, 1));
+                    Thread.sleep(tiempo);
+                    
+                    System.out.print(convierteNumero(letra, i, 0));
+                    enviarDato(convierteNumero(letra, i, 0));
+                    Thread.sleep(tiempo);
+                    System.out.print(" ");
+                }
+                if (Character.isUpperCase(letra)) {
+                    //Impresion del simbolo de mayuscula
+                    System.out.print(convierteMayuscula(i, 1));
+                    enviarDato(convierteMayuscula(i, 1));
+                    Thread.sleep(tiempo);
+
+                    System.out.print(convierteMayuscula(i, 0));
+                    enviarDato(convierteMayuscula(i, 0));
+                    Thread.sleep(tiempo);
+
+                    System.out.print(" ");
+                    //Letra en minuscula
+                    letra = Character.toLowerCase(letra);
+
+                    System.out.print(convierte(letra, i, 1)); //i es el punto en braille en la columna 0
+                    enviarDato(convierte(letra, i, 1));
+                    Thread.sleep(tiempo);
+
+                    System.out.print(convierte(letra, i, 0) + " ");// punto de braille en la columna 1
+                    enviarDato(convierte(letra, i, 0));
+                    Thread.sleep(tiempo);
+                } else {
+                    System.out.print(convierte(letra, i, 1)); //i es el punto en braille en la columna 0
+                    enviarDato(convierte(letra, i, 1));
+                    Thread.sleep(tiempo);
+
+                    System.out.print(convierte(letra, i, 0) + " ");// punto de braille en la columna 1
+                    enviarDato(convierte(letra, i, 0));
+                    Thread.sleep(tiempo);
+                }
+            } catch (InterruptedException ex) {
+                Logger.getLogger(Braille.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+        return k;
+    }
+
+    private String convierteMayuscula(int row, int col) {
+        String aux = "";
+        aux = mayuscula[row].charAt(col) + "";
+        return aux;
+    }
+
+    private String convierteNumero(char letra, int row, int col) {
+        String aux = "";
+        aux = signoNumero[row].charAt(col) + "";
+        return aux;
     }
 
     private String convierte(char letra, int row, int col) {
         String aux = "";
         switch (letra) {
-            //Mayusculas----------------------------------------------------
-            case 'A':
-                //System.out.println("A");
-                aux = a[row].charAt(col) + "";
-                break;
-            case 'B':
-                //System.out.println("B");
-                break;
-            case 'C':
-                System.out.println("C");
-                break;
-            case 'D':
-                System.out.println("D");
-                break;
-            case 'E':
-                System.out.println("E");
-                break;
-            case 'F':
-                System.out.println("F");
-                break;
-            case 'G':
-                System.out.println("G");
-                break;
-            case 'H':
-                System.out.println("H");
-                break;
-            case 'I':
-                System.out.println("I");
-                break;
-            case 'J':
-                System.out.println("J");
-                break;
-            case 'K':
-                System.out.println("K");
-                break;
-            case 'L':
-                System.out.println("L");
-                break;
-            case 'M':
-                System.out.println("M");
-                break;
-            case 'N':
-                System.out.println("N");
-                break;
-            case 'Ñ':
-                System.out.println("Ñ");
-                break;
-            case 'O':
-                System.out.println("O");
-                break;
-            case 'P':
-                System.out.println("P");
-                break;
-            case 'Q':
-                System.out.println("Q");
-                break;
-            case 'R':
-                System.out.println("R");
-                break;
-            case 'S':
-                System.out.println("S");
-                break;
-            case 'T':
-                System.out.println("T");
-                break;
-            case 'U':
-                System.out.println("U");
-                break;
-            case 'V':
-                System.out.println("V");
-                break;
-            case 'W':
-                System.out.println("W");
-                break;
-            case 'X':
-                System.out.println("X");
-                break;
-            case 'Y':
-                System.out.println("Y");
-                break;
-            case 'Z':
-                System.out.println("Z");
-                break;
             //Letras acentuadas
             case 'á':
                 //System.out.println("á");
@@ -471,33 +502,43 @@ public class Braille {
             //Numeros-------------------------------------------------------
             case '1':
                 //System.out.println("1");
+                aux = a[row].charAt(col) + "";
                 break;
             case '2':
                 //System.out.println("2");
+                aux = b[row].charAt(col) + "";
                 break;
             case '3':
                 //System.out.println("3");
+                aux = c[row].charAt(col) + "";
                 break;
             case '4':
                 //System.out.println("4");
+                aux = d[row].charAt(col) + "";
                 break;
             case '5':
                 //System.out.println("5");
+                aux = e[row].charAt(col) + "";
                 break;
             case '6':
                 //System.out.println("6");
+                aux = f[row].charAt(col) + "";
                 break;
             case '7':
                 //System.out.println("7");
+                aux = g[row].charAt(col) + "";
                 break;
             case '8':
                 //System.out.println("8");
+                aux = h[row].charAt(col) + "";
                 break;
             case '9':
                 //System.out.println("9");
+                aux = i[row].charAt(col) + "";
                 break;
             case '0':
                 //System.out.println("0");
+                aux = j[row].charAt(col) + "";
                 break;
             //Signos de puntuacion   
             case '.':
@@ -546,7 +587,7 @@ public class Braille {
                 System.out.println("");
                 break;
             default:
-                System.out.println("Caracter no reconocido: + " + letra);
+                System.out.println("Caracter no reconocido: " + letra);
                 break;
         }
         return aux;
@@ -557,17 +598,6 @@ public class Braille {
         switch (letra) {
             case 'a':
                 aux = a[row];
-                break;
-            case 'b':
-                aux = b[row];
-                break;
-            case 'c':
-                aux = c[row];
-                break;
-            case 'd':
-                aux = d[row];
-                break;
-            default:
                 break;
         }
         return aux;

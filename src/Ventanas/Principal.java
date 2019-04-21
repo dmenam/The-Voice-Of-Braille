@@ -1,6 +1,7 @@
 package Ventanas;
 
 import Conexiones.Braille;
+import Conexiones.Comandos_Voz;
 import Conexiones.FileManager;
 
 public class Principal {
@@ -12,8 +13,6 @@ public class Principal {
         //Archivo a = new Archivo();
         //Creditos c = new Creditos();
         //Ayuda a = new Ayuda(i);
-        //Comandos_Voz c = new Comandos_Voz(i);
-        
-       
+        //Comandos_Voz c = new Comandos_Voz();       
     }
 }

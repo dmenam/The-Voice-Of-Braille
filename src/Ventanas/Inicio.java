@@ -52,7 +52,7 @@ public class Inicio extends JFrame {
     private FileManager manager;
     private File archivo;
 
-    private JButton btnLimpiar, btnImprimir, btnGuardar, btnCancelar;
+    private JButton btnLimpiar, btnImprimir, btnGuardar;
     private JButton btnEscanear, btnConectar;
 
     private JLabel fondo, titulo;
@@ -213,9 +213,32 @@ public class Inicio extends JFrame {
         scroll.setLocation(panel1.getWidth() * 2 / 100, panel1.getHeight() * 2 / 100);
         panel1.add(scroll);
 
+        btnImprimir = new JButton("Imprimir");
+        btnImprimir.setBounds(10, 10, panel1.getWidth() * 20 / 100, (panel1.getHeight() * 5) / 100);
+        btnImprimir.setLocation((panel1.getWidth() - btnImprimir.getWidth()) * 2 / 100, (panel1.getHeight() - btnImprimir.getHeight()) * 95 / 100);
+        btnImprimir.setEnabled(false);
+        btnImprimir.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                imprimir();
+            }
+        });
+        panel1.add(btnImprimir);
+
+        btnGuardar = new JButton("Guardar");
+        btnGuardar.setBounds(10, 10, panel1.getWidth() * 20 / 100, (panel1.getHeight() * 5) / 100);
+        btnGuardar.setLocation((panel1.getWidth() - btnGuardar.getWidth()) * 30 / 100, (panel1.getHeight() - btnGuardar.getHeight()) * 95 / 100);
+        btnGuardar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                guardarArchivo();
+            }
+        });
+        panel1.add(btnGuardar);
+
         btnLimpiar = new JButton("Limpiar");
         btnLimpiar.setBounds(10, 10, panel1.getWidth() * 20 / 100, (panel1.getHeight() * 5) / 100);
-        btnLimpiar.setLocation((panel1.getWidth() - btnLimpiar.getWidth()) * 2 / 100, (panel1.getHeight() - btnLimpiar.getHeight()) * 95 / 100);
+        btnLimpiar.setLocation((panel1.getWidth() - btnLimpiar.getWidth()) * 95 / 100, (panel1.getHeight() - btnLimpiar.getHeight()) * 95 / 100);
         btnLimpiar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
@@ -232,22 +255,6 @@ public class Inicio extends JFrame {
             }
         });
         panel1.add(btnLimpiar);
-
-        btnCancelar = new JButton("Cancelar");
-        btnCancelar.setBounds(10, 10, panel1.getWidth() * 20 / 100, (panel1.getHeight() * 5) / 100);
-        btnCancelar.setLocation((panel1.getWidth() - btnCancelar.getWidth()) * 30 / 100, (panel1.getHeight() - btnCancelar.getHeight()) * 95 / 100);
-        panel1.add(btnCancelar);
-
-        btnImprimir = new JButton("Imprimir");
-        btnImprimir.setBounds(10, 10, panel1.getWidth() * 20 / 100, (panel1.getHeight() * 5) / 100);
-        btnImprimir.setLocation((panel1.getWidth() - btnImprimir.getWidth()) * 95 / 100, (panel1.getHeight() - btnImprimir.getHeight()) * 95 / 100);
-        btnImprimir.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent ae) {
-                braille.imprimirBraille(texto.getText(), 36);
-            }
-        });
-        panel1.add(btnImprimir);
         getContentPane().add(panel1);
 //Fin del acomodo del panel 1  
 
@@ -301,11 +308,13 @@ public class Inicio extends JFrame {
                         braille.setArduino(ino);
                         JLestado.setText("Estado: Conectado");
                         btnConectar.setText("Desconectar");
+                        btnImprimir.setEnabled(true);
                     }
                 } else {
                     braille.setArduino(null);
                     ino.finalizarConexion();
                     btnConectar.setText("Conectar");
+                    //btnImprimir.setEnabled(false);
                     JLestado.setText("Estado: Desconectado");
                     ino = null;
                 }
@@ -341,6 +350,22 @@ public class Inicio extends JFrame {
 
     public String getTexto() {
         return this.texto.getText();
+    }
+
+    public boolean imprimir() {
+        try {
+//------------------------------------------------------------------------------
+            ino.cargarPapel();
+            System.out.println("Cargando papel");
+            braille.imprimirBraille(texto.getText(), 30);
+            //JOptionPane.showMessageDialog(this, "Imprimiendo...");
+            ino.expulsarPapel();
+            System.out.print("Sacando papel....");
+//------------------------------------------------------------------------------
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     public Configuracion getConfiguracion() {

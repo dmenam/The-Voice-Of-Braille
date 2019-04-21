@@ -13,9 +13,9 @@ public class Comandos_Voz extends ResultAdapter {
     String gst;
     private Inicio inicio;
 
-    public Comandos_Voz(Inicio inicio) {
+    public Comandos_Voz() {
         this.inicio = inicio;
-                try {
+        try {
             recognizer = Central.createRecognizer(new EngineModeDesc(Locale.ROOT));
             recognizer.allocate();
 

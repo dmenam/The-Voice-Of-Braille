@@ -1,5 +1,6 @@
-package Conexiones;
+package Braille;
 
+import Conexiones.Arduino;
 import com.panamahitek.ArduinoException;
 import java.util.StringTokenizer;
 import java.util.logging.Level;
@@ -10,8 +11,8 @@ public class Braille {
 
     //Letras en Braille                 
     private final String[] mayuscula = {"01",
-        "00",
-        "01"};//46
+                                        "00",
+                                        "01"};//46
 
     private final String[] a = {"10",
                                 "00",
@@ -35,7 +36,7 @@ public class Braille {
 
     private final String[] f = {"11",
                                 "10",
-                                 "00"};//124
+                                "00"};//124
 
     private final String[] g = {"11",
         "11",

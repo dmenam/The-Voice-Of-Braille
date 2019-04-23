@@ -34,10 +34,10 @@ public class Configuracion extends JDialog {
 
     private JComboBox puertosCOM;
 
-    private JButton btnSalir;
-    private JButton btnAceptar;
-    private JButton btnCambiarRuta;
-    private JButton btnAplicar;
+    private Button btnSalir;
+    private Button btnAceptar;
+    private Button btnCambiarRuta;
+    private Button btnAplicar;
 
     private JToggleButton btnComandos;
     private JToggleButton btnBluetooth;
@@ -118,10 +118,14 @@ public class Configuracion extends JDialog {
         config[0] = manager.getDirectorioPorDefecto().getAbsolutePath();
         panel.add(ruta);
 
-        btnCambiarRuta = new JButton("...");
+        btnCambiarRuta = new Button();
+        btnCambiarRuta.setText("...");
         btnCambiarRuta.setBounds(10, 10, panel.getWidth() * 6 / 100, ruta.getHeight());
         btnCambiarRuta.setLocation(ruta.getLocation().x + ruta.getWidth(), (panel.getHeight() - btnCambiarRuta.getHeight()) * 25 / 100);
         btnCambiarRuta.setFont(new Font("Times New Roman", Font.PLAIN, 22));
+        btnCambiarRuta.setColor1(Color.WHITE); //Color superior
+        btnCambiarRuta.setColor2(Color.BLACK); //Color inferior
+        btnCambiarRuta.setColor3(Color.WHITE); //Color de borde
         btnCambiarRuta.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
@@ -236,9 +240,13 @@ public class Configuracion extends JDialog {
         btnComandos.setFont(new Font("Times New Roman", Font.PLAIN, 22));
         panel.add(btnComandos);
 
-        btnAplicar = new JButton("Aplicar");
+        btnAplicar = new Button();
+        btnAplicar.setText("Aplicar");
         btnAplicar.setBounds(10, 10, panel.getWidth() * 20 / 100, panel.getHeight() * 10 / 100);
         btnAplicar.setLocation((ventana.width - btnAplicar.getWidth()) * 80 / 100, (ventana.height - btnAplicar.getHeight()) * 90 / 100);
+        btnAplicar.setColor1(Color.WHITE); //Color superior
+        btnAplicar.setColor2(Color.BLACK); //Color inferior
+        btnAplicar.setColor3(Color.WHITE); //Color de borde
         btnAplicar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
@@ -255,9 +263,13 @@ public class Configuracion extends JDialog {
         btnAplicar.setEnabled(false);
         getContentPane().add(btnAplicar);
 
-        btnSalir = new JButton("Salir");
+        btnSalir = new Button();
+        btnSalir.setText("Salir");
         btnSalir.setBounds(10, 10, panel.getWidth() * 20 / 100, panel.getHeight() * 10 / 100);
         btnSalir.setLocation((ventana.width - btnSalir.getWidth()) * 50 / 100, (ventana.height - btnSalir.getHeight()) * 90 / 100);
+        btnSalir.setColor1(Color.WHITE); //Color superior
+        btnSalir.setColor2(Color.BLACK); //Color inferior
+        btnSalir.setColor3(Color.WHITE); //Color de borde
         btnSalir.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
@@ -276,9 +288,13 @@ public class Configuracion extends JDialog {
         });
         getContentPane().add(btnSalir);
 
-        btnAceptar = new JButton("Aceptar");
+        btnAceptar = new Button();
+        btnAceptar.setText("Aceptar");
         btnAceptar.setBounds(10, 10, panel.getWidth() * 20 / 100, panel.getHeight() * 10 / 100);
         btnAceptar.setLocation((ventana.width - btnAceptar.getWidth()) * 20 / 100, (ventana.height - btnAceptar.getHeight()) * 90 / 100);
+        btnAceptar.setColor1(Color.WHITE); //Color superior
+        btnAceptar.setColor2(Color.BLACK); //Color inferior
+        btnAceptar.setColor3(Color.WHITE); //Color de borde
         btnAceptar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {

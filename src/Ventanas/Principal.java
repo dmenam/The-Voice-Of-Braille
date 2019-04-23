@@ -1,6 +1,6 @@
 package Ventanas;
 
-import Conexiones.Braille;
+import Braille.Braille;
 import Conexiones.Comandos_Voz;
 import Conexiones.FileManager;
 

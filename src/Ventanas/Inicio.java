@@ -1,10 +1,10 @@
 package Ventanas;
 
+import Braille.FontBraille;
 import Conexiones.FileManager;
 import Conexiones.Arduino;
-import Conexiones.Braille;
+import Braille.Braille;
 //import Conexiones.Voz;
-import com.panamahitek.ArduinoException;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -31,10 +31,10 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.KeyStroke;
+import javax.swing.border.Border;
 
 public class Inicio extends JFrame {
 
@@ -52,8 +52,9 @@ public class Inicio extends JFrame {
     private FileManager manager;
     private File archivo;
 
-    private JButton btnLimpiar, btnImprimir, btnGuardar;
-    private JButton btnEscanear, btnConectar;
+    private Button btnLimpiar, btnImprimir, btnGuardar;
+    private Button btnTipoLetra;
+    private Button btnEscanear, btnConectar;
 
     private JLabel fondo, titulo;
     private JLabel BTdispositivo;
@@ -61,7 +62,7 @@ public class Inicio extends JFrame {
 
     private JComboBox CBdispositivosBT;
 
-    private JPanel panel1, panel2;
+    private JPanelRound panel1, panel2;
 
     private Configuracion configuracion;
     private Creditos creditos;
@@ -195,28 +196,60 @@ public class Inicio extends JFrame {
 
         getContentPane().add(menu);
 //Fin acomodo del menu superior       
-
+                
 //Acomodo del panel 1 donde se muestra el texto normal
-        panel1 = new JPanel();
+        panel1 = new JPanelRound();
         panel1.setBounds(0, 0, (ventana.width * 70) / 100, (ventana.height * 75) / 100);
         panel1.setLocation((ventana.width - panel1.getWidth()) * 80 / 100, (ventana.height - panel1.getHeight()) * 60 / 100);
         panel1.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         panel1.setBackground(Color.DARK_GRAY);
         panel1.setLayout(null);
-
+        
         texto = new JTextArea();
         texto.setLineWrap(true);
         texto.setWrapStyleWord(true);
         texto.setFont(new Font("Times New Roman", Font.PLAIN, 25));
+        
         JScrollPane scroll = new JScrollPane(texto);
         scroll.setSize(panel1.getWidth() * 95 / 100, (panel1.getHeight() * 85) / 100);
         scroll.setLocation(panel1.getWidth() * 2 / 100, panel1.getHeight() * 2 / 100);
         panel1.add(scroll);
+        
+        //Tipo de letra del texto
+        FontBraille fontBraille = new FontBraille();
+        btnTipoLetra = new Button();
+        btnTipoLetra.setText("ABC");
+        btnTipoLetra.setBounds(10, 10, ventana.width * 5 / 100, ventana.height * 5 / 100);
+        btnTipoLetra.setLocation((ventana.width - btnTipoLetra.getWidth()) * 90 / 100, (ventana.height - btnTipoLetra.getHeight()) * 10 / 100);
+        btnTipoLetra.setColor1(Color.WHITE); //Color superior
+        btnTipoLetra.setColor2(Color.BLACK); //Color inferior
+        btnTipoLetra.setColor3(Color.GRAY); //Color de borde
+        btnTipoLetra.setFont(new Font("Times New Roman", Font.PLAIN, 15));
+        btnTipoLetra.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(btnTipoLetra.getFont().equals(fontBraille.MyFont(Font.PLAIN, 15)))
+                {
+                    btnTipoLetra.setFont(new Font("Times New Roman", Font.PLAIN, 15));
+                    texto.setFont(new Font("Times New Roman", Font.PLAIN, 25));
+                }
+                else {
+                    btnTipoLetra.setFont(fontBraille.MyFont(Font.PLAIN, 15));
+                    texto.setFont(fontBraille.MyFont(Font.PLAIN, 25));
+                }
+            }
+        });
+        getContentPane().add(btnTipoLetra);
 
-        btnImprimir = new JButton("Imprimir");
+        btnImprimir = new Button();
+        btnImprimir.setText("Imprimir");
         btnImprimir.setBounds(10, 10, panel1.getWidth() * 20 / 100, (panel1.getHeight() * 5) / 100);
         btnImprimir.setLocation((panel1.getWidth() - btnImprimir.getWidth()) * 2 / 100, (panel1.getHeight() - btnImprimir.getHeight()) * 95 / 100);
         btnImprimir.setEnabled(false);
+        btnImprimir.setColor1(Color.WHITE); //Color superior
+        btnImprimir.setColor2(Color.BLACK); //Color inferior
+        btnImprimir.setColor3(Color.WHITE); //Color de borde
+        btnImprimir.setFont(new Font("Times New Roman", Font.BOLD, 15));
         btnImprimir.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
@@ -225,9 +258,14 @@ public class Inicio extends JFrame {
         });
         panel1.add(btnImprimir);
 
-        btnGuardar = new JButton("Guardar");
+        btnGuardar = new Button();
+        btnGuardar.setText("Guardar");
         btnGuardar.setBounds(10, 10, panel1.getWidth() * 20 / 100, (panel1.getHeight() * 5) / 100);
         btnGuardar.setLocation((panel1.getWidth() - btnGuardar.getWidth()) * 30 / 100, (panel1.getHeight() - btnGuardar.getHeight()) * 95 / 100);
+        btnGuardar.setColor1(Color.WHITE); //Color superior
+        btnGuardar.setColor2(Color.BLACK); //Color inferior
+        btnGuardar.setColor3(Color.WHITE); //Color de borde
+        btnGuardar.setFont(new Font("Times New Roman", Font.BOLD, 15));
         btnGuardar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -236,9 +274,14 @@ public class Inicio extends JFrame {
         });
         panel1.add(btnGuardar);
 
-        btnLimpiar = new JButton("Limpiar");
+        btnLimpiar = new Button();
+        btnLimpiar.setText("Limpiar");
         btnLimpiar.setBounds(10, 10, panel1.getWidth() * 20 / 100, (panel1.getHeight() * 5) / 100);
         btnLimpiar.setLocation((panel1.getWidth() - btnLimpiar.getWidth()) * 95 / 100, (panel1.getHeight() - btnLimpiar.getHeight()) * 95 / 100);
+        btnLimpiar.setColor1(Color.WHITE); //Color superior
+        btnLimpiar.setColor2(Color.BLACK); //Color inferior
+        btnLimpiar.setColor3(Color.WHITE); //Color de borde
+        btnLimpiar.setFont(new Font("Times New Roman", Font.BOLD, 15));
         btnLimpiar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
@@ -259,10 +302,11 @@ public class Inicio extends JFrame {
 //Fin del acomodo del panel 1  
 
 //Acomodo del panel 2 donde se muestra las conexiones Bluetooth        
-        panel2 = new JPanel();
+        panel2 = new JPanelRound();
         panel2.setBounds(0, 0, (ventana.width * 18) / 100, (ventana.height * 10) / 100);
         panel2.setLocation((ventana.width - panel2.getWidth()) * 3 / 100, (ventana.height - panel2.getHeight()) * 20 / 100);
-        panel2.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(new Color(0, 0, 0)), "Dispositivos Bluetooth"));
+        Border border = BorderFactory.createTitledBorder(BorderFactory.createLineBorder(new Color(110, 110, 100)), "Dispositivos Bluetooth");
+        panel2.setBorder(border);
         panel2.setBackground(new Color(0, 0, 0, 0));
         panel2.setLayout(null);
 
@@ -278,9 +322,13 @@ public class Inicio extends JFrame {
         CBdispositivosBT.setLocation((panel2.getWidth() - CBdispositivosBT.getWidth()) * 90 / 100, (panel2.getHeight() - CBdispositivosBT.getHeight()) * 35 / 100);
         panel2.add(CBdispositivosBT);
 
-        btnEscanear = new JButton("Escanear");
+        btnEscanear = new Button();
+        btnEscanear.setText("Escanear");
         btnEscanear.setBounds(15, 15, panel2.getWidth() * 45 / 100, (panel2.getHeight() * 25) / 100);
         btnEscanear.setLocation((panel2.getWidth() - btnEscanear.getWidth()) * 5 / 100, (panel2.getHeight() - btnEscanear.getHeight()) * 90 / 100);
+        btnEscanear.setColor1(Color.WHITE); //Color superior
+        btnEscanear.setColor2(Color.GRAY); //Color inferior
+        btnEscanear.setColor3(Color.WHITE); //Color de borde
         btnEscanear.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
@@ -295,10 +343,14 @@ public class Inicio extends JFrame {
         });
         panel2.add(btnEscanear);
 
-        btnConectar = new JButton("Conectar");
+        btnConectar = new Button();
+        btnConectar.setText("Conectar");
         btnConectar.setBounds(15, 15, panel2.getWidth() * 45 / 100, (panel2.getHeight() * 25) / 100);
         btnConectar.setLocation((panel2.getWidth() - btnConectar.getWidth()) * 95 / 100, (panel2.getHeight() - btnConectar.getHeight()) * 90 / 100);
         btnConectar.setEnabled(false);
+        btnConectar.setColor1(Color.WHITE); //Color superior
+        btnConectar.setColor2(Color.GRAY); //Color inferior
+        btnConectar.setColor3(Color.WHITE); //Color de borde
         btnConectar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {

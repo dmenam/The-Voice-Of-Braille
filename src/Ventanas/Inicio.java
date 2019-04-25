@@ -245,7 +245,7 @@ public class Inicio extends JFrame {
         btnImprimir.setText("Imprimir");
         btnImprimir.setBounds(10, 10, panel1.getWidth() * 20 / 100, (panel1.getHeight() * 5) / 100);
         btnImprimir.setLocation((panel1.getWidth() - btnImprimir.getWidth()) * 2 / 100, (panel1.getHeight() - btnImprimir.getHeight()) * 95 / 100);
-        btnImprimir.setEnabled(false);
+        //btnImprimir.setEnabled(false);
         btnImprimir.setColor1(Color.WHITE); //Color superior
         btnImprimir.setColor2(Color.BLACK); //Color inferior
         btnImprimir.setColor3(Color.WHITE); //Color de borde
@@ -407,11 +407,11 @@ public class Inicio extends JFrame {
     public boolean imprimir() {
         try {
 //------------------------------------------------------------------------------
-            ino.cargarPapel();
+            //ino.cargarPapel();
             System.out.println("Cargando papel");
             braille.imprimirBraille(texto.getText(), 30);
             //JOptionPane.showMessageDialog(this, "Imprimiendo...");
-            ino.expulsarPapel();
+            //ino.expulsarPapel();
             System.out.print("Sacando papel....");
 //------------------------------------------------------------------------------
             return true;

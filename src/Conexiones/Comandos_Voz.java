@@ -10,15 +10,18 @@ import java.io.FileReader;
 import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 public class Comandos_Voz extends ResultAdapter {
 
     static Recognizer recognizer;
     private String gst;
     private Inicio inicio;
+    private Voz voz;
 
-    public Comandos_Voz() {
-        iniciarComandos();
+    public Comandos_Voz(Inicio ini, Voz voz) {
+        this.inicio = ini;
+        this.voz = voz;
     }
 
     public void iniciarComandos() {
@@ -35,7 +38,7 @@ public class Comandos_Voz extends ResultAdapter {
             // Añadir el oyente para obtener resultados.
             recognizer.addResultListener(this);
 
-            System.out.println("Empieze Dictado");
+            System.out.println("Empieze con los Comandos");
             recognizer.commitChanges();
 
             recognizer.requestFocus();
@@ -85,6 +88,11 @@ public class Comandos_Voz extends ResultAdapter {
                     break;
                 case "Iniciar dictado":
                     System.out.println("caso " + args);
+                    recognizer.releaseFocus();
+                    JOptionPane.showMessageDialog(null, "Comenzara el dictado...");
+                    voz.iniciarDictado();
+                    JOptionPane.showMessageDialog(null, "Finalizo el dictado...");
+                    recognizer.requestFocus();
                     break;
                 case "Finalizar dictado":
                     System.out.println("caso " + args);
@@ -110,10 +118,12 @@ public class Comandos_Voz extends ResultAdapter {
 
     public void suspenerComandos() {
         recognizer.suspend();
+        recognizer.releaseFocus();
     }
 
     public void reaunudarComandos() {
         try {
+            recognizer.requestFocus();
             recognizer.resume();
         } catch (AudioException ex) {
             Logger.getLogger(Comandos_Voz.class.getName()).log(Level.SEVERE, null, ex);

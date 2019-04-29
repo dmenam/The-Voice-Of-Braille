@@ -4,6 +4,7 @@ import Braille.FontBraille;
 import Conexiones.FileManager;
 import Conexiones.Arduino;
 import Braille.Braille;
+import Conexiones.Comandos_Voz;
 import Conexiones.Voz;
 
 import java.awt.Color;
@@ -69,6 +70,7 @@ public class Inicio extends JFrame {
     private Ayuda ayuda;
 
     private Voz voz;
+    private Comandos_Voz comandos;
     
     public Inicio() {
         //Tamaño de la pantalla
@@ -102,7 +104,7 @@ public class Inicio extends JFrame {
         ino = new Arduino();
         //----------------------------------------------------------------------
         voz = new Voz(this);
-        
+        comandos = new Comandos_Voz(this, voz);
         
         titulo = new JLabel("The Voice Of Braille");
         titulo.setSize((ventana.width * 60) / 100, (ventana.height * 15) / 100);
@@ -288,7 +290,9 @@ public class Inicio extends JFrame {
         btnDictado.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                comandos.suspenerComandos();
                 voz.iniciarDictado();
+                comandos.reaunudarComandos();
             }
         });
         panel1.add(btnDictado);
@@ -411,6 +415,11 @@ public class Inicio extends JFrame {
         Icon iconoFondo = new ImageIcon(imagenFondo.getImage().getScaledInstance(ventana.width, ventana.height, Image.SCALE_AREA_AVERAGING));
         fondo.setIcon(iconoFondo);
         getContentPane().add(fondo);
+        
+        if(FileManager.leerConfiguracion(3).equals("1"))
+        {
+            comandos.iniciarComandos();
+        }
     }
 
     public Inicio getMe() {

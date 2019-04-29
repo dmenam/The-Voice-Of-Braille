@@ -9,21 +9,13 @@ public <sentence> =
 [<dato4>]
 [<dato5>]
 [<dato6>]
-[<dato7>]
-[<dato8>]
-[<dato9>]
-[<dato10>]
-[<dato11>];
+[<dato7>];
  
-<dato0>=Inicio;
-<dato1>=Encender impresora;
-<dato2>=Apagar impresora;
-<dato3>=Imprimir texto;
-<dato4>=Cancelar;
-<dato5>=Guardar documento;
-<dato6>=Limpiar Texto;
-<dato7>=Abrir Ayuda;
-<dato8>=Cerrar Ayuda;
-<dato9>=Abrir Configuracion;
-<dato10>=Cerrar Configuracion;
-<dato11>=Salir;
+<dato0>=Encender impresora;
+<dato1>=Apagar impresora;
+<dato2>=Imprimir texto;
+<dato3>=Desactivar comandos de voz;
+<dato4>=Guardar texto;
+<dato5>=Salir;
+<dato6>=Iniciar dictado;
+<dato7>=Finalizar dictado;

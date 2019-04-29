@@ -10,14 +10,20 @@ public <sentence> =
 [<dato5>]
 [<dato6>]
 [<dato7>]
-[<dato8>];
+[<dato8>]
+[<dato9>]
+[<dato10>]
+[<dato11>];
  
 <dato0>=Inicio;
 <dato1>=Encender impresora;
 <dato2>=Apagar impresora;
-<dato3>=Imprimir;
+<dato3>=Imprimir texto;
 <dato4>=Cancelar;
-<dato5>=Guardar;
-<dato6>=Leer Texto;
-<dato7>=Ayuda;
-<dato8>=Salir;
+<dato5>=Guardar documento;
+<dato6>=Limpiar Texto;
+<dato7>=Abrir Ayuda;
+<dato8>=Cerrar Ayuda;
+<dato9>=Abrir Configuracion;
+<dato10>=Cerrar Configuracion;
+<dato11>=Salir;

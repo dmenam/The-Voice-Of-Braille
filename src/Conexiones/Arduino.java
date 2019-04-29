@@ -68,6 +68,7 @@ public final class Arduino extends PanamaHitek_Arduino {
     public void expulsarPapel() {
         try {
             this.sendData("4");
+            this.sendData("5");
         } catch (ArduinoException ex) {
             Logger.getLogger(Arduino.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SerialPortException ex) {

@@ -4,7 +4,7 @@ import Braille.FontBraille;
 import Conexiones.FileManager;
 import Conexiones.Arduino;
 import Braille.Braille;
-//import Conexiones.Voz;
+import Conexiones.Voz;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -23,7 +23,6 @@ import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -55,6 +54,7 @@ public class Inicio extends JFrame {
     private Button btnLimpiar, btnImprimir, btnGuardar;
     private Button btnTipoLetra;
     private Button btnEscanear, btnConectar;
+    private Button btnDictado;
 
     private JLabel fondo, titulo;
     private JLabel BTdispositivo;
@@ -68,7 +68,8 @@ public class Inicio extends JFrame {
     private Creditos creditos;
     private Ayuda ayuda;
 
-    //private Voz voz;
+    private Voz voz;
+    
     public Inicio() {
         //Tamaño de la pantalla
         Dimension pantalla;
@@ -100,7 +101,9 @@ public class Inicio extends JFrame {
         //Arduino
         ino = new Arduino();
         //----------------------------------------------------------------------
-
+        voz = new Voz(this);
+        
+        
         titulo = new JLabel("The Voice Of Braille");
         titulo.setSize((ventana.width * 60) / 100, (ventana.height * 15) / 100);
         titulo.setLocation((ventana.width - titulo.getWidth()) * 55 / 100, (ventana.height - titulo.getHeight()) * 5 / 100);
@@ -245,7 +248,7 @@ public class Inicio extends JFrame {
         btnImprimir.setText("Imprimir");
         btnImprimir.setBounds(10, 10, panel1.getWidth() * 20 / 100, (panel1.getHeight() * 5) / 100);
         btnImprimir.setLocation((panel1.getWidth() - btnImprimir.getWidth()) * 2 / 100, (panel1.getHeight() - btnImprimir.getHeight()) * 95 / 100);
-        //btnImprimir.setEnabled(false);
+        btnImprimir.setEnabled(false);
         btnImprimir.setColor1(Color.WHITE); //Color superior
         btnImprimir.setColor2(Color.BLACK); //Color inferior
         btnImprimir.setColor3(Color.WHITE); //Color de borde
@@ -273,6 +276,22 @@ public class Inicio extends JFrame {
             }
         });
         panel1.add(btnGuardar);
+        
+        btnDictado = new Button();
+        btnDictado.setText("Iniciar Dictado por Voz");
+        btnDictado.setBounds(10, 10, panel1.getWidth() * 20 / 100, (panel1.getHeight() * 5) / 100);
+        btnDictado.setLocation((panel1.getWidth() - btnDictado.getWidth()) * 60 / 100, (panel1.getHeight() - btnDictado.getHeight()) * 95 / 100);
+        btnDictado.setColor1(Color.WHITE); //Color superior
+        btnDictado.setColor2(Color.BLACK); //Color inferior
+        btnDictado.setColor3(Color.WHITE); //Color de borde
+        btnDictado.setFont(new Font("Times New Roman", Font.BOLD, 15));
+        btnDictado.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                voz.iniciarDictado();
+            }
+        });
+        panel1.add(btnDictado);
 
         btnLimpiar = new Button();
         btnLimpiar.setText("Limpiar");
@@ -362,6 +381,7 @@ public class Inicio extends JFrame {
                         btnConectar.setText("Desconectar");
                         btnImprimir.setEnabled(true);
                     }
+                    return;
                 } else {
                     braille.setArduino(null);
                     ino.finalizarConexion();
@@ -369,6 +389,7 @@ public class Inicio extends JFrame {
                     //btnImprimir.setEnabled(false);
                     JLestado.setText("Estado: Desconectado");
                     ino = null;
+                    return;
                 }
             }
         });
@@ -407,11 +428,11 @@ public class Inicio extends JFrame {
     public boolean imprimir() {
         try {
 //------------------------------------------------------------------------------
-            //ino.cargarPapel();
+            ino.cargarPapel();
             System.out.println("Cargando papel");
             braille.imprimirBraille(texto.getText(), 30);
             //JOptionPane.showMessageDialog(this, "Imprimiendo...");
-            //ino.expulsarPapel();
+            ino.expulsarPapel();
             System.out.print("Sacando papel....");
 //------------------------------------------------------------------------------
             return true;

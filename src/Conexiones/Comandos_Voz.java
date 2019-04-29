@@ -1,29 +1,38 @@
 package Conexiones;
 
 import Ventanas.Ayuda;
+import Ventanas.Configuracion;
+import Ventanas.Creditos;
 import Ventanas.Inicio;
 import javax.speech.*;
 import javax.speech.recognition.*;
 import java.io.FileReader;
 import java.util.Locale;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Comandos_Voz extends ResultAdapter {
 
     static Recognizer recognizer;
-    String gst;
+    private String gst;
     private Inicio inicio;
 
     public Comandos_Voz() {
-        this.inicio = inicio;
+        iniciarComandos();
+    }
+
+    public void iniciarComandos() {
         try {
             recognizer = Central.createRecognizer(new EngineModeDesc(Locale.ROOT));
+            // Poner en marcha el reconocedor
             recognizer.allocate();
 
+            // Cargar la gramática de un archivo y habilitarla
             FileReader grammar1 = new FileReader("comandos.txt");
-
             RuleGrammar rg = recognizer.loadJSGF(grammar1);
             rg.setEnabled(true);
 
+            // Añadir el oyente para obtener resultados.
             recognizer.addResultListener(this);
 
             System.out.println("Empieze Dictado");
@@ -37,104 +46,57 @@ public class Comandos_Voz extends ResultAdapter {
             System.exit(0);
         }
     }
-    
+
     @Override
     public void resultAccepted(ResultEvent re) {
         try {
             Result res = (Result) (re.getSource());
             ResultToken tokens[] = res.getBestTokens();
 
-            String args[] = new String[1];
-            args[0] = "";
+            String args;
+            args = "";
             for (int i = 0; i < tokens.length; i++) {
                 gst = tokens[i].getSpokenText();
-                args[0] += gst + " ";
-                System.out.print(gst + " ");
-            }
-            System.out.println();
-            //------------------------------------------------------------------
-            if(gst.equals("Inicio")) {
-                if(inicio.getAyuda() != null) {
-                    inicio.cerrarAyuda();
-                }
-                if(inicio.getConfiguracion()!= null) {
-                    inicio.cerrarConfiguracion();
-                }
-                if(inicio.getCreditos()!= null) {
-                    inicio.cerrarCreditos();
-                }
-            } else {
-                recognizer.suspend();
-                //Lee.main(args);
-                recognizer.resume();
+                args += gst + " ";
             }
             //------------------------------------------------------------------
-            if(gst.equals("Encender impresora")) {
-                
-            } else {
-                recognizer.suspend();
-                //Lee.main(args);
-                recognizer.resume();
-            }
-            //------------------------------------------------------------------
-            if(gst.equals("Apagar Impresora")) {
-                
-            } else {
-                recognizer.suspend();
-                //Lee.main(args);
-                recognizer.resume();
-            }
-            //------------------------------------------------------------------
-            if(gst.equals("Imprimir")) {
-                
-            }
-            //------------------------------------------------------------------
-            if(gst.equals("Cancelar")) {
-                
-            } else {
-                recognizer.suspend();
-                //Lee.main(args);
-                recognizer.resume();
-            }
-            //------------------------------------------------------------------
-            if(gst.equals("Guardar")) {
-                
-            } else {
-                recognizer.suspend();
-                //Lee.main(args);
-                recognizer.resume();
-            }
-            //------------------------------------------------------------------
-            if(gst.equals("Leer Texto")) {
-                
-            } else {
-                recognizer.suspend();
-                //Lee.main(args);
-                recognizer.resume();
-            }
-            //------------------------------------------------------------------
-            if(gst.equals("Ayuda")) {
-                if(inicio.getAyuda() == null) {
-                    Ayuda a = new Ayuda(inicio);
-                } else {
-                    inicio.cerrarAyuda();
-                }
-            } else {
-                recognizer.suspend();
-                //Lee.main(args);
-                recognizer.resume();
-            }
-            //------------------------------------------------------------------
-            if (gst.equals("Salir")) {
-                recognizer.deallocate();
-                args[0] = "Hasta la proxima!";
-                System.out.println(args[0]);
-                //Lee.main(args);
-                System.exit(0);
-            } else {
-                recognizer.suspend();
-                //Lee.main(args);
-                recognizer.resume();
+            System.out.println(args);
+            //EL resultado tiene un espacio al final
+            args = args.trim();
+            switch (args) {
+                case "Encender impresora":
+                    System.out.println("caso " + args);
+                    break;
+                case "Apagar impresora":
+                    System.out.println("caso " + args);
+                    break;
+                case "Imprimir texto":
+                    System.out.println("caso " + args);
+                    inicio.imprimir();
+                    break;
+                case "Desactivar comandos de voz":
+                    System.out.println("caso " + args);
+                    finalizarUsoComandos();
+                    System.out.println("Comandos desactivados");
+                    break;
+                case "Guardar texto":
+                    System.out.println("caso " + args);
+                    inicio.guardarArchivo();
+                    break;
+                case "Iniciar dictado":
+                    System.out.println("caso " + args);
+                    break;
+                case "Finalizar dictado":
+                    System.out.println("caso " + args);
+                    break;
+                case "Salir":
+                    System.out.println("caso " + args);
+                    recognizer.deallocate();
+                    args = "Hasta la proxima!";
+                    System.out.println(args);
+                    //Lee.main(args);
+                    System.exit(0);
+                    break;
             }
             //------------------------------------------------------------------
         } catch (Exception ex) {
@@ -142,27 +104,32 @@ public class Comandos_Voz extends ResultAdapter {
         }
     }
 
-    /*public void primero() {
+    public void setInicio(Inicio inicio) {
+        this.inicio = inicio;
+    }
+
+    public void suspenerComandos() {
+        recognizer.suspend();
+    }
+
+    public void reaunudarComandos() {
         try {
-            recognizer = Central.createRecognizer(new EngineModeDesc(Locale.ROOT));
-            recognizer.allocate();
-
-            FileReader grammar1 = new FileReader("comandos.txt");
-
-            RuleGrammar rg = recognizer.loadJSGF(grammar1);
-            rg.setEnabled(true);
-
-            recognizer.addResultListener(new Comandos_Voz());
-
-            System.out.println("Empieze Dictado");
-            recognizer.commitChanges();
-
-            recognizer.requestFocus();
             recognizer.resume();
-        } catch (Exception e) {
-            System.out.println("Exception en " + e.toString());
-            e.printStackTrace();
-            System.exit(0);
+        } catch (AudioException ex) {
+            Logger.getLogger(Comandos_Voz.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (EngineStateError ex) {
+            Logger.getLogger(Comandos_Voz.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }*/
+    }
+            
+    public void finalizarUsoComandos() {
+        try {
+            recognizer.suspend();
+            recognizer.deallocate();
+        } catch (EngineException ex) {
+            Logger.getLogger(Comandos_Voz.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (EngineStateError ex) {
+            Logger.getLogger(Comandos_Voz.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        }
 }

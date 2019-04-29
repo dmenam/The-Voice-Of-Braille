@@ -11,6 +11,7 @@ public class FontBraille {
 
     public FontBraille() {
         String fontName = "Braille6-ANSI.ttf" ;
+        //String fontName = "BrailleESP6.ttf" ;
         try {
             //Se carga la fuente
             InputStream is =  getClass().getResourceAsStream(fontName);

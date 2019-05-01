@@ -38,6 +38,7 @@ public final class Arduino extends PanamaHitek_Arduino {
             return true;
         } catch (ArduinoException ex) {
             Logger.getLogger(Arduino.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null, "Error al conectarse con el Arduino", "Error", JOptionPane.ERROR_MESSAGE);
             return false;
         }
     }

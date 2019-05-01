@@ -8,8 +8,8 @@ import Conexiones.Voz;
 public class Principal {
 
     public static void main(String[] args) {
-        //Splash s = new Splash(); 
-        Inicio i = new Inicio();
+        Splash s = new Splash(); 
+        //Inicio i = new Inicio();
         //Configuracion c = new Configuracion();
         //Archivo a = new Archivo();
         //Creditos c = new Creditos();

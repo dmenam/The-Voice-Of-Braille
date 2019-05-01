@@ -21,14 +21,16 @@ public class Ayuda extends JDialog{
     private JTextArea txtComandos;
     
     private String tituloC = "Comandos disponibles";
-    private String comandos = "INICIO: Abre la ventana principal.\n"
-            + "ENCENDER IMPRESORA: Enciende la impresora. \n"
-            + "APAGAR IMPRESORA: Apaga la impresora. \n"
-            + "IMPRIMIR: Manda a immprimir el texto a la impresora. \n"
-            + "CANCELAR: Cierra la ventana.  \n"
-            + "GUARDAR: Guarda el archivo actual. \n"
-            + "AYUDA: Abre la ventana de Ayuda. \n"
-            + "SALIR: Finaliza la ejecucion del programa. \n";
+    private String comandos = "Encender impresora: Habilita el uso de la impresora. \n"
+            + "Apagar impresora: Deshabilita el uso de la impresora. \n"
+            + "Imprimir texto: Imprime el texto que hay en el campo de texto \n"
+            + "Desactivar comandos de Voz: Desactiva los comandos de voz \n"
+            + "Guardar Texto: Abre la ventana para guardar el texto introducido en el campo de texto \n"
+            + "Salir: Finaliza la ejecución del programa \n"
+            + "Iniciar dictado: Inicia el dictado por voz.\n"
+            + "\n NOTA: EL DICTADO DEBE SER SEGUIDO, SI SE HACE UNA PAUSA"
+            + " PROLONGADA, DEBERA VOLVER A COMENZAR EL DICTADO "
+            + " POR VOZ.";
    
     public Ayuda(JFrame frame){
         super(frame, true);
@@ -74,6 +76,8 @@ public class Ayuda extends JDialog{
         txtComandos.setLocation((ventana.width - txtComandos.getWidth()) / 2, (ventana.height - txtComandos.getHeight()) * 95 / 100);
         txtComandos.setEditable(false);
         txtComandos.setOpaque(false);
+        txtComandos.setLineWrap(true);
+        txtComandos.setWrapStyleWord(true);
         txtComandos.setText(comandos);
         getContentPane().add(txtComandos);
         

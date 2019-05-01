@@ -49,6 +49,7 @@ public class Voz {
                 exitCode = 0;
             } else if (result.getReason() == ResultReason.NoMatch) {
                 System.out.println("NOMATCH: Speech could not be recognized.");
+                JOptionPane.showMessageDialog(inicio, "No se pudo reconocer nada", "Alerta", JOptionPane.WARNING_MESSAGE);
             } else if (result.getReason() == ResultReason.Canceled) {
                 CancellationDetails cancellation = CancellationDetails.fromResult(result);
                 System.out.println("CANCELED: Reason=" + cancellation.getReason());
@@ -65,10 +66,10 @@ public class Voz {
             //System.exit(exitCode);
         } catch (Exception ex) {
             System.out.println("Unexpected exception: " + ex.getMessage());
-
+            JOptionPane.showMessageDialog(inicio, "Error en el dictado, verifique su conexion a Internet o su microfono e intentelo mas tarde", "Error", JOptionPane.ERROR_MESSAGE);
             assert (false);
             System.exit(1);
-        }
+        } 
     }
 
     public String getTextoDictado() {

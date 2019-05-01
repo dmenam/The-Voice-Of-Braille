@@ -18,10 +18,12 @@ public class Comandos_Voz extends ResultAdapter {
     private String gst;
     private Inicio inicio;
     private Voz voz;
+    private boolean estado;
 
     public Comandos_Voz(Inicio ini, Voz voz) {
         this.inicio = ini;
         this.voz = voz;
+        estado = false;
     }
 
     public void iniciarComandos() {
@@ -43,6 +45,7 @@ public class Comandos_Voz extends ResultAdapter {
 
             recognizer.requestFocus();
             recognizer.resume();
+            estado = true;
         } catch (Exception e) {
             System.out.println("Exception en " + e.toString());
             e.printStackTrace();
@@ -131,15 +134,20 @@ public class Comandos_Voz extends ResultAdapter {
             Logger.getLogger(Comandos_Voz.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-            
+
     public void finalizarUsoComandos() {
         try {
             recognizer.suspend();
             recognizer.deallocate();
+            estado = false;
         } catch (EngineException ex) {
             Logger.getLogger(Comandos_Voz.class.getName()).log(Level.SEVERE, null, ex);
         } catch (EngineStateError ex) {
             Logger.getLogger(Comandos_Voz.class.getName()).log(Level.SEVERE, null, ex);
         }
-        }
+    }
+
+    public boolean getEstadoComandos() {
+        return estado;
+    }
 }

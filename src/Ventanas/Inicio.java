@@ -89,8 +89,12 @@ public class Inicio extends JFrame {
         //Inicializar componentes
         inicializar(ventana);
         setLocationRelativeTo(null);
-        setVisible(true);
-
+        setVisible(true);    
+        if(FileManager.leerConfiguracion(3).equals("1"))
+        {
+            comandos.iniciarComandos();
+            JOptionPane.showMessageDialog(this, "Comandos de Voz activados");
+        }
     }
 
     private void inicializar(Dimension ventana) {
@@ -290,9 +294,15 @@ public class Inicio extends JFrame {
         btnDictado.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                comandos.suspenerComandos();
-                voz.iniciarDictado();
-                comandos.reaunudarComandos();
+                if(comandos.getEstadoComandos()) {
+                    comandos.suspenerComandos();
+                    voz.iniciarDictado();
+                    comandos.reaunudarComandos();
+                }
+                else {
+                    voz.iniciarDictado();
+                }
+                
             }
         });
         panel1.add(btnDictado);
@@ -343,6 +353,12 @@ public class Inicio extends JFrame {
         CBdispositivosBT = new JComboBox();
         CBdispositivosBT.setBounds(15, 15, panel2.getWidth() * 60 / 100, (panel2.getHeight() * 25) / 100);
         CBdispositivosBT.setLocation((panel2.getWidth() - CBdispositivosBT.getWidth()) * 90 / 100, (panel2.getHeight() - CBdispositivosBT.getHeight()) * 35 / 100);
+        CBdispositivosBT.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                btnConectar.setEnabled(true);
+            }
+        });
         panel2.add(CBdispositivosBT);
 
         btnEscanear = new Button();
@@ -378,8 +394,7 @@ public class Inicio extends JFrame {
             @Override
             public void actionPerformed(ActionEvent ae) {
                 if (btnConectar.getText().equals("Conectar")) {
-                    ino.conectar(CBdispositivosBT.getSelectedItem().toString());
-                    if (ino != null) {
+                    if (ino.conectar(CBdispositivosBT.getSelectedItem().toString())) {
                         braille.setArduino(ino);
                         JLestado.setText("Estado: Conectado");
                         btnConectar.setText("Desconectar");
@@ -388,9 +403,12 @@ public class Inicio extends JFrame {
                     return;
                 } else {
                     braille.setArduino(null);
-                    ino.finalizarConexion();
+                    if(ino != null) {
+                        ino.finalizarConexion();
+                    }
                     btnConectar.setText("Conectar");
-                    //btnImprimir.setEnabled(false);
+                    btnConectar.setEnabled(false);
+                    btnImprimir.setEnabled(false);
                     JLestado.setText("Estado: Desconectado");
                     ino = null;
                     return;
@@ -415,11 +433,6 @@ public class Inicio extends JFrame {
         Icon iconoFondo = new ImageIcon(imagenFondo.getImage().getScaledInstance(ventana.width, ventana.height, Image.SCALE_AREA_AVERAGING));
         fondo.setIcon(iconoFondo);
         getContentPane().add(fondo);
-        
-        if(FileManager.leerConfiguracion(3).equals("1"))
-        {
-            comandos.iniciarComandos();
-        }
     }
 
     public Inicio getMe() {
@@ -427,7 +440,7 @@ public class Inicio extends JFrame {
     }
 
     public void setTexto(String texto) {
-        this.texto.append(texto);
+        this.texto.append(texto + "\n");
     }
 
     public String getTexto() {

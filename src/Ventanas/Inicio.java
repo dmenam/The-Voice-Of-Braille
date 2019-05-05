@@ -5,6 +5,7 @@ import Conexiones.FileManager;
 import Conexiones.Arduino;
 import Braille.Braille;
 import Conexiones.Comandos_Voz;
+import Conexiones.Habla;
 import Conexiones.Voz;
 
 import java.awt.Color;
@@ -294,6 +295,7 @@ public class Inicio extends JFrame {
         btnDictado.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                /*
                 if(comandos.getEstadoComandos()) {
                     comandos.suspenerComandos();
                     voz.iniciarDictado();
@@ -302,7 +304,10 @@ public class Inicio extends JFrame {
                 else {
                     voz.iniciarDictado();
                 }
-                
+                */
+                Habla h = new Habla();
+                h.hablar(getTexto());
+                h.finalizar();
             }
         });
         panel1.add(btnDictado);

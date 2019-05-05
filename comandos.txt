@@ -18,4 +18,4 @@ public <sentence> =
 <dato4>=Guardar texto;
 <dato5>=Salir;
 <dato6>=Iniciar dictado;
-<dato7>=Finalizar dictado;
+<dato7>=Leer texto;

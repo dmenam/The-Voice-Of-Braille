@@ -20,8 +20,8 @@ public class Comandos_Voz extends ResultAdapter {
     private Voz voz;
     private boolean estado;
 
-    public Comandos_Voz(Inicio ini, Voz voz) {
-        this.inicio = ini;
+    public Comandos_Voz(Inicio inicio, Voz voz) {
+        this.inicio = inicio;
         this.voz = voz;
         estado = false;
     }
@@ -97,8 +97,11 @@ public class Comandos_Voz extends ResultAdapter {
                     JOptionPane.showMessageDialog(null, "Finalizo el dictado...");
                     recognizer.requestFocus();
                     break;
-                case "Finalizar dictado":
+                case "Leer texto":
                     System.out.println("caso " + args);
+                    Habla habla = new Habla();
+                    habla.hablar(inicio.getTexto());
+                    habla.finalizar();
                     break;
                 case "Salir":
                     System.out.println("caso " + args);

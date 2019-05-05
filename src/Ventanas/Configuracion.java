@@ -1,6 +1,7 @@
 package Ventanas;
 
 import Conexiones.Arduino;
+import Conexiones.Comandos_Voz;
 import Conexiones.FileManager;
 //import Conexiones.Voz;
 import java.awt.Color;
@@ -46,6 +47,7 @@ public class Configuracion extends JDialog {
 
     private FileManager manager;
     private Arduino ino;
+    private Comandos_Voz comandos;
 
     private String[] config;
 
@@ -83,9 +85,6 @@ public class Configuracion extends JDialog {
         setVisible(true);
     }
 
-    public boolean cambiarEstadoComandos() {
-        return true;
-    }
 
     private void inicializarComponentes(Dimension ventana) {
 
@@ -230,6 +229,7 @@ public class Configuracion extends JDialog {
                     btnComandos.setText("ACTIVADO");
                     config[3] = "1";
                     btnAplicar.setEnabled(true);
+                
                 } else {
                     btnComandos.setText("DESACTIVADO");
                     config[3] = "0";

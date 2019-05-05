@@ -17,9 +17,8 @@ public class Principal {
         //Comandos_Voz c = new Comandos_Voz();       
         //c.setInicio(i);
         //Pruebas pruebas = new Pruebas();
-        //
-        //Voz v = new Voz();
         
-        //
+        //Voz v = new Voz();
     }
+        //
 }

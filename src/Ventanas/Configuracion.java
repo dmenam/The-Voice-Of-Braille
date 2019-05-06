@@ -47,7 +47,8 @@ public class Configuracion extends JDialog {
 
     private FileManager manager;
     private Arduino ino;
-    private Comandos_Voz comandos;
+    private boolean comandos;
+    private Inicio inicio;
 
     private String[] config;
 
@@ -57,8 +58,9 @@ public class Configuracion extends JDialog {
     * config[2] = estado del bluetooth
     * config[3] = comandos de voz (activado/desactivado)
      */
-    public Configuracion(JFrame frame, FileManager manager, Arduino ino) {
+    public Configuracion(Inicio frame, FileManager manager, Arduino ino) {
         super(frame, true);
+        this.inicio = frame;
         setTitle("Configuración");
         //Manejador de Archivos.
         this.manager = manager;
@@ -84,7 +86,6 @@ public class Configuracion extends JDialog {
         setLocationRelativeTo(null);
         setVisible(true);
     }
-
 
     private void inicializarComponentes(Dimension ventana) {
 
@@ -215,11 +216,13 @@ public class Configuracion extends JDialog {
             btnComandos.setSelected(true);
             btnComandos.setText("ACTIVADO");
             config[3] = "1";
+            comandos = true;
         }
         if (FileManager.leerConfiguracion(3).equals("0")) {
             btnComandos.setSelected(false);
             btnComandos.setText("DESACTIVADO");
             config[3] = "0";
+            comandos = false;
         }
         //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
         btnComandos.addActionListener(new ActionListener() {
@@ -229,11 +232,12 @@ public class Configuracion extends JDialog {
                     btnComandos.setText("ACTIVADO");
                     config[3] = "1";
                     btnAplicar.setEnabled(true);
-                
+                    comandos = true;
                 } else {
                     btnComandos.setText("DESACTIVADO");
                     config[3] = "0";
                     btnAplicar.setEnabled(true);
+                    comandos = false;
                 }
             }
         });
@@ -258,6 +262,11 @@ public class Configuracion extends JDialog {
                 FileManager.escribirConfiguracion(config);
                 btnAplicar.setEnabled(false);
                 btnAceptar.setEnabled(true);
+                if (comandos) {
+                    inicio.iniciarComandos();
+                } else {
+                    inicio.finalizarComandos();
+                }
             }
         });
         btnAplicar.setEnabled(false);
@@ -277,6 +286,12 @@ public class Configuracion extends JDialog {
                     int resp = JOptionPane.showConfirmDialog(null, "¿Desea Guardar los cambios realizados?");
                     if (resp == JOptionPane.YES_OPTION) {
                         FileManager.escribirConfiguracion(config);
+                        if (comandos) {
+                            inicio.iniciarComandos();
+                        } else {
+                            inicio.finalizarComandos();
+                        }
+                        dispose();
                     }
                     if (resp == JOptionPane.NO_OPTION) {
                         dispose();

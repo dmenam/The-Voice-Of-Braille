@@ -56,7 +56,7 @@ public class Inicio extends JFrame {
     private Button btnLimpiar, btnImprimir, btnGuardar;
     private Button btnTipoLetra;
     private Button btnEscanear, btnConectar;
-    private Button btnDictado;
+    private Button btnDictado, btnLeer;
 
     private JLabel fondo, titulo;
     private JLabel BTdispositivo;
@@ -72,7 +72,9 @@ public class Inicio extends JFrame {
 
     private Voz voz;
     private Comandos_Voz comandos;
-    
+    private boolean estadoComandos;
+    private Habla hablar;
+
     public Inicio() {
         //Tamaño de la pantalla
         Dimension pantalla;
@@ -90,12 +92,8 @@ public class Inicio extends JFrame {
         //Inicializar componentes
         inicializar(ventana);
         setLocationRelativeTo(null);
-        setVisible(true);    
-        if(FileManager.leerConfiguracion(3).equals("1"))
-        {
-            comandos.iniciarComandos();
-            JOptionPane.showMessageDialog(this, "Comandos de Voz activados");
-        }
+        setVisible(true);
+        notificarUsoComandos();
     }
 
     private void inicializar(Dimension ventana) {
@@ -109,8 +107,9 @@ public class Inicio extends JFrame {
         ino = new Arduino();
         //----------------------------------------------------------------------
         voz = new Voz(this);
-        comandos = new Comandos_Voz(this, voz);
-        
+        comandos = new Comandos_Voz(this);
+        estadoComandos = false;
+
         titulo = new JLabel("The Voice Of Braille");
         titulo.setSize((ventana.width * 60) / 100, (ventana.height * 15) / 100);
         titulo.setLocation((ventana.width - titulo.getWidth()) * 55 / 100, (ventana.height - titulo.getHeight()) * 5 / 100);
@@ -206,7 +205,7 @@ public class Inicio extends JFrame {
 
         getContentPane().add(menu);
 //Fin acomodo del menu superior       
-                
+
 //Acomodo del panel 1 donde se muestra el texto normal
         panel1 = new JPanelRound();
         panel1.setBounds(0, 0, (ventana.width * 70) / 100, (ventana.height * 75) / 100);
@@ -214,17 +213,17 @@ public class Inicio extends JFrame {
         panel1.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         panel1.setBackground(Color.DARK_GRAY);
         panel1.setLayout(null);
-        
+
         texto = new JTextArea();
         texto.setLineWrap(true);
         texto.setWrapStyleWord(true);
         texto.setFont(new Font("Times New Roman", Font.PLAIN, 25));
-        
+
         JScrollPane scroll = new JScrollPane(texto);
         scroll.setSize(panel1.getWidth() * 95 / 100, (panel1.getHeight() * 85) / 100);
         scroll.setLocation(panel1.getWidth() * 2 / 100, panel1.getHeight() * 2 / 100);
         panel1.add(scroll);
-        
+
         //Tipo de letra del texto
         FontBraille fontBraille = new FontBraille();
         btnTipoLetra = new Button();
@@ -238,12 +237,10 @@ public class Inicio extends JFrame {
         btnTipoLetra.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(btnTipoLetra.getFont().equals(fontBraille.MyFont(Font.PLAIN, 15)))
-                {
+                if (btnTipoLetra.getFont().equals(fontBraille.MyFont(Font.PLAIN, 15))) {
                     btnTipoLetra.setFont(new Font("Times New Roman", Font.PLAIN, 15));
                     texto.setFont(new Font("Times New Roman", Font.PLAIN, 25));
-                }
-                else {
+                } else {
                     btnTipoLetra.setFont(fontBraille.MyFont(Font.PLAIN, 15));
                     texto.setFont(fontBraille.MyFont(Font.PLAIN, 25));
                 }
@@ -283,34 +280,6 @@ public class Inicio extends JFrame {
             }
         });
         panel1.add(btnGuardar);
-        
-        btnDictado = new Button();
-        btnDictado.setText("Iniciar Dictado por Voz");
-        btnDictado.setBounds(10, 10, panel1.getWidth() * 20 / 100, (panel1.getHeight() * 5) / 100);
-        btnDictado.setLocation((panel1.getWidth() - btnDictado.getWidth()) * 60 / 100, (panel1.getHeight() - btnDictado.getHeight()) * 95 / 100);
-        btnDictado.setColor1(Color.WHITE); //Color superior
-        btnDictado.setColor2(Color.BLACK); //Color inferior
-        btnDictado.setColor3(Color.WHITE); //Color de borde
-        btnDictado.setFont(new Font("Times New Roman", Font.BOLD, 15));
-        btnDictado.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                /*
-                if(comandos.getEstadoComandos()) {
-                    comandos.suspenerComandos();
-                    voz.iniciarDictado();
-                    comandos.reaunudarComandos();
-                }
-                else {
-                    voz.iniciarDictado();
-                }
-                */
-                Habla h = new Habla();
-                h.hablar(getTexto());
-                h.finalizar();
-            }
-        });
-        panel1.add(btnDictado);
 
         btnLimpiar = new Button();
         btnLimpiar.setText("Limpiar");
@@ -408,7 +377,7 @@ public class Inicio extends JFrame {
                     return;
                 } else {
                     braille.setArduino(null);
-                    if(ino != null) {
+                    if (ino != null) {
                         ino.finalizarConexion();
                     }
                     btnConectar.setText("Conectar");
@@ -432,6 +401,39 @@ public class Inicio extends JFrame {
         JLestado.setFont(new Font("Tahoma", Font.PLAIN, 30));
         getContentPane().add(JLestado);
 
+//Botones del manejor de voz        
+        btnDictado = new Button();
+        btnDictado.setText("Iniciar Dictado por Voz");
+        btnDictado.setBounds(10, 10, ventana.width * 20 / 100, (ventana.height * 5) / 100);
+        btnDictado.setLocation((ventana.width - btnDictado.getWidth()) * 2 / 100, (ventana.height - btnDictado.getHeight()) * 65 / 100);
+        btnDictado.setColor1(Color.WHITE); //Color superior
+        btnDictado.setColor2(Color.BLACK); //Color inferior
+        btnDictado.setColor3(Color.WHITE); //Color de borde
+        btnDictado.setFont(new Font("Times New Roman", Font.BOLD, 15));
+        btnDictado.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                iniciarDictado();
+            }
+        });
+        getContentPane().add(btnDictado);
+
+        btnLeer = new Button();
+        btnLeer.setText("Leer Texto Introducido");
+        btnLeer.setBounds(10, 10, ventana.width * 20 / 100, (ventana.height * 5) / 100);
+        btnLeer.setLocation((ventana.width - btnLeer.getWidth()) * 2 / 100, (ventana.height - btnLeer.getHeight()) * 75 / 100);
+        btnLeer.setColor1(Color.WHITE); //Color superior
+        btnLeer.setColor2(Color.BLACK); //Color inferior
+        btnLeer.setColor3(Color.WHITE); //Color de borde
+        btnLeer.setFont(new Font("Times New Roman", Font.BOLD, 15));
+        btnLeer.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                hablarTexto();
+            }
+        });
+        getContentPane().add(btnLeer);
+
         fondo = new JLabel();
         fondo.setSize(ventana.width, ventana.height);
         ImageIcon imagenFondo = new ImageIcon(getClass().getResource("../Imagenes/fondo.jpg"));
@@ -453,17 +455,20 @@ public class Inicio extends JFrame {
     }
 
     public boolean imprimir() {
-        try {
-//------------------------------------------------------------------------------
-            ino.cargarPapel();
-            System.out.println("Cargando papel");
-            braille.imprimirBraille(texto.getText(), 30);
-            //JOptionPane.showMessageDialog(this, "Imprimiendo...");
-            ino.expulsarPapel();
-            System.out.print("Sacando papel....");
-//------------------------------------------------------------------------------
-            return true;
-        } catch (Exception e) {
+        if (ino.getConexion()) {
+            try {
+                ino.cargarPapel();
+                System.out.println("Cargando papel");
+                braille.imprimirBraille(texto.getText(), 30);
+                //JOptionPane.showMessageDialog(this, "Imprimiendo...");
+                ino.expulsarPapel();
+                System.out.print("Sacando papel....");
+                return true;
+            } catch (Exception e) {
+                return false;
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Verifique su conexion, No es posible conectarse con Arduino", "Verifique su conexión", JOptionPane.ERROR_MESSAGE);
             return false;
         }
     }
@@ -549,5 +554,46 @@ public class Inicio extends JFrame {
             Logger.getLogger(Inicio.class.getName()).log(Level.SEVERE, null, ex);
         }
 
+    }
+
+    public void leerTexto() {
+        hablar = new Habla();
+        hablar.hablar(getTexto());
+        hablar.finalizar();
+    }
+
+    public void iniciarDictado() {
+        if (comandos.getEstadoComandos()) {
+            comandos.suspenerComandos();
+            voz.iniciarDictado();
+            comandos.reaunudarComandos();
+        } else {
+            voz.iniciarDictado();
+        }
+    }
+
+    public void hablarTexto() {
+        hablar = new Habla();
+        hablar.hablar(getTexto());
+        hablar.finalizar();
+    }
+
+    public void iniciarComandos() {
+        comandos.iniciarComandos();
+        estadoComandos = true;
+        notificarUsoComandos();
+    }
+
+    public void finalizarComandos() {
+        comandos.finalizarUsoComandos();
+        estadoComandos = false;
+    }
+
+    private void notificarUsoComandos() {
+        if (FileManager.leerConfiguracion(3).equals("1")) {
+            comandos.iniciarComandos();
+            estadoComandos = true;
+            JOptionPane.showMessageDialog(this, "Comandos de Voz activados");
+        }
     }
 }

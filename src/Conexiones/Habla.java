@@ -26,8 +26,11 @@ public class Habla {
                     hReader.setAudio("LTTS7AudioBoard", null, 32000, "linear", 2);
                     /* Load of Ludoviko voice with his default language */
                     hReader.loadPersona("Jorge", null, null);
+                    //hReader.setLanguage(new TTSLanguage("SpanishEs", "SpanishEs"));
                     /* Read the Ludoviko demo sentence */
+                    texto = convertirÑ(texto);
                     hReader.read(texto, false, false);
+                    
                 } catch (TTSException e) {
                     e.printStackTrace();
                 }
@@ -36,6 +39,14 @@ public class Habla {
             e.printStackTrace();
         }
     }
+    
+    private String convertirÑ(String texto) {
+        texto = texto.replaceAll("ñ", "ni");
+        texto = texto.replaceAll("Ñ", "ni");
+        return texto ;
+    }
+    
+    
     
     public boolean finalizar() {
         try {

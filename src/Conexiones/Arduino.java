@@ -16,9 +16,11 @@ public final class Arduino extends PanamaHitek_Arduino {
     private String puerto;
     private int BAUDIOS = 9600;
     private String dato;
+    private boolean conexion;
 
     public Arduino() {
         this.puerto = null;
+        this.conexion = false;
     }
 
     public boolean conectar(String puerto) {
@@ -35,10 +37,12 @@ public final class Arduino extends PanamaHitek_Arduino {
                     }
                 }
             });
+            conexion = true;
             return true;
         } catch (ArduinoException ex) {
             Logger.getLogger(Arduino.class.getName()).log(Level.SEVERE, null, ex);
             JOptionPane.showMessageDialog(null, "Error al conectarse con el Arduino", "Error", JOptionPane.ERROR_MESSAGE);
+            conexion = false;
             return false;
         }
     }
@@ -85,5 +89,9 @@ public final class Arduino extends PanamaHitek_Arduino {
         } catch (SerialPortException ex) {
             Logger.getLogger(Arduino.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    
+    public boolean getConexion() {
+        return conexion;
     }
 }

@@ -20,9 +20,8 @@ public class Comandos_Voz extends ResultAdapter {
     private Voz voz;
     private boolean estado;
 
-    public Comandos_Voz(Inicio inicio, Voz voz) {
+    public Comandos_Voz(Inicio inicio) {
         this.inicio = inicio;
-        this.voz = voz;
         estado = false;
     }
 
@@ -50,6 +49,7 @@ public class Comandos_Voz extends ResultAdapter {
             System.out.println("Exception en " + e.toString());
             e.printStackTrace();
             System.exit(0);
+            estado = false;
         }
     }
 
@@ -93,15 +93,13 @@ public class Comandos_Voz extends ResultAdapter {
                     System.out.println("caso " + args);
                     recognizer.releaseFocus();
                     JOptionPane.showMessageDialog(null, "Comenzara el dictado...");
-                    voz.iniciarDictado();
+                    inicio.iniciarDictado();
                     JOptionPane.showMessageDialog(null, "Finalizo el dictado...");
                     recognizer.requestFocus();
                     break;
                 case "Leer texto":
                     System.out.println("caso " + args);
-                    Habla habla = new Habla();
-                    habla.hablar(inicio.getTexto());
-                    habla.finalizar();
+                    inicio.leerTexto();
                     break;
                 case "Salir":
                     System.out.println("caso " + args);
@@ -143,6 +141,7 @@ public class Comandos_Voz extends ResultAdapter {
             recognizer.suspend();
             recognizer.deallocate();
             estado = false;
+            System.out.println("Comandos Finalizados");
         } catch (EngineException ex) {
             Logger.getLogger(Comandos_Voz.class.getName()).log(Level.SEVERE, null, ex);
         } catch (EngineStateError ex) {

@@ -83,8 +83,4 @@ public class Voz {
     public void setApiKEY(String ApiKEY) {
         this.ApiKEY = ApiKEY;
     }
-    
-    public void setInicio(Inicio inicio) {
-        this.inicio = inicio;
-    }
 }

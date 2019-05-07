@@ -1,9 +1,7 @@
 package Ventanas;
 
 import Conexiones.Arduino;
-import Conexiones.Comandos_Voz;
 import Conexiones.FileManager;
-//import Conexiones.Voz;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -14,10 +12,8 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -264,8 +260,10 @@ public class Configuracion extends JDialog {
                 btnAceptar.setEnabled(true);
                 if (comandos) {
                     inicio.iniciarComandos();
+                    comandos = false;
                 } else {
                     inicio.finalizarComandos();
+                    comandos = false;
                 }
             }
         });
@@ -288,8 +286,10 @@ public class Configuracion extends JDialog {
                         FileManager.escribirConfiguracion(config);
                         if (comandos) {
                             inicio.iniciarComandos();
+                            comandos = false;
                         } else {
                             inicio.finalizarComandos();
+                            comandos = false;
                         }
                         dispose();
                     }

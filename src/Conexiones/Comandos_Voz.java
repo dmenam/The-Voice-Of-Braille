@@ -106,6 +106,7 @@ public class Comandos_Voz extends ResultAdapter {
                     recognizer.deallocate();
                     args = "Hasta la proxima!";
                     System.out.println(args);
+                    inicio.vozSalir();
                     //Lee.main(args);
                     System.exit(0);
                     break;

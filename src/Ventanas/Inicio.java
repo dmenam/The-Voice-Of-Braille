@@ -5,7 +5,7 @@ import Conexiones.FileManager;
 import Conexiones.Arduino;
 import Braille.Braille;
 import Conexiones.Comandos_Voz;
-import Conexiones.Habla;
+import Conexiones.LeerTTS;
 import Conexiones.Voz;
 
 import java.awt.Color;
@@ -73,7 +73,7 @@ public class Inicio extends JFrame {
     private Voz voz;
     private Comandos_Voz comandos;
     private boolean estadoComandos;
-    private Habla hablar;
+    private LeerTTS hablar;
 
     public Inicio() {
         //Tamaño de la pantalla
@@ -429,7 +429,7 @@ public class Inicio extends JFrame {
         btnLeer.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                hablarTexto();
+                leerTexto();
             }
         });
         getContentPane().add(btnLeer);
@@ -557,9 +557,12 @@ public class Inicio extends JFrame {
     }
 
     public void leerTexto() {
-        hablar = new Habla();
-        hablar.hablar(getTexto());
-        hablar.finalizar();
+        try {
+            hablar = new LeerTTS();
+            hablar.leerTexto(getTexto());
+        } catch (Exception ex) {
+            Logger.getLogger(Inicio.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     public void iniciarDictado() {
@@ -570,12 +573,6 @@ public class Inicio extends JFrame {
         } else {
             voz.iniciarDictado();
         }
-    }
-
-    public void hablarTexto() {
-        hablar = new Habla();
-        hablar.hablar(getTexto());
-        hablar.finalizar();
     }
 
     public void iniciarComandos() {
@@ -594,6 +591,25 @@ public class Inicio extends JFrame {
             comandos.iniciarComandos();
             estadoComandos = true;
             JOptionPane.showMessageDialog(this, "Comandos de Voz activados");
+            vozSaludar();
+        }
+    }
+    
+    public void vozSalir() {
+        try {
+            hablar = new LeerTTS();
+            hablar.leerTexto("Goodbye");
+        } catch (Exception ex) {
+            Logger.getLogger(Inicio.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public void vozSaludar() {
+        try {
+            hablar = new LeerTTS();
+            hablar.leerTexto("Hola, Esto es The Voice of Braile.");
+        } catch (Exception ex) {
+            Logger.getLogger(Inicio.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 }

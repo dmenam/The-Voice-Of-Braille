@@ -23,7 +23,7 @@ public class Voz {
     public void iniciarDictado() {
         try {
             // Replace below with your own subscription key
-            ApiKEY = "1f1a11d6c6994bf289bd9c51aab7d9ac";
+            ApiKEY = "866f8d7288bb4fe7b0404d2af18c2ae1";
             // Replace below with your own service region (e.g., "westus").
 
             int exitCode = 1;

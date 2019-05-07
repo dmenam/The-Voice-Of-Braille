@@ -4,6 +4,10 @@ import Braille.Braille;
 import Conexiones.Comandos_Voz;
 import Conexiones.FileManager;
 import Conexiones.Voz;
+import java.util.Locale;
+import javax.speech.Central;
+import javax.speech.synthesis.Synthesizer;
+import javax.speech.synthesis.SynthesizerModeDesc;
 
 public class Principal {
 
@@ -17,8 +21,8 @@ public class Principal {
         //Comandos_Voz c = new Comandos_Voz();       
         //c.setInicio(i);
         //Pruebas pruebas = new Pruebas();
+
+        //Voz v = new Voz(i);
         
-        //Voz v = new Voz();
     }
-        //
 }

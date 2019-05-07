@@ -33,9 +33,6 @@ public class LeerTTS {
             
             // Espera a que termine de hablar
             synth.waitEngineState(Synthesizer.QUEUE_EMPTY);
-            
-            // Limpiamos todo
-            synth.deallocate();
         } catch (InterruptedException ex) {
             Logger.getLogger(LeerTTS.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IllegalArgumentException ex) {
@@ -46,6 +43,20 @@ public class LeerTTS {
             Logger.getLogger(LeerTTS.class.getName()).log(Level.SEVERE, null, ex);
         } catch (AudioException ex) {
             Logger.getLogger(LeerTTS.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public boolean finalizarTodo() {    
+        try {
+            // Limpiamos todo
+            synth.deallocate();
+            return true;
+        } catch (EngineException ex) {
+            Logger.getLogger(LeerTTS.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        } catch (EngineStateError ex) {
+            Logger.getLogger(LeerTTS.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
         }
     }
 }

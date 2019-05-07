@@ -7,6 +7,7 @@ import Braille.Braille;
 import Conexiones.Comandos_Voz;
 import Conexiones.LeerTTS;
 import Conexiones.Voz;
+import com.sun.javafx.geom.transform.CanTransformVec3d;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -17,6 +18,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -93,7 +95,9 @@ public class Inicio extends JFrame {
         inicializar(ventana);
         setLocationRelativeTo(null);
         setVisible(true);
-        notificarUsoComandos();
+        if (FileManager.leerConfiguracion(3).equals("1")) {
+            iniciarComandos();
+        }
     }
 
     private void inicializar(Dimension ventana) {
@@ -108,6 +112,7 @@ public class Inicio extends JFrame {
         //----------------------------------------------------------------------
         voz = new Voz(this);
         comandos = new Comandos_Voz(this);
+        hablar = new LeerTTS();
         estadoComandos = false;
 
         titulo = new JLabel("The Voice Of Braille");
@@ -218,10 +223,40 @@ public class Inicio extends JFrame {
         texto.setLineWrap(true);
         texto.setWrapStyleWord(true);
         texto.setFont(new Font("Times New Roman", Font.PLAIN, 25));
-
         JScrollPane scroll = new JScrollPane(texto);
         scroll.setSize(panel1.getWidth() * 95 / 100, (panel1.getHeight() * 85) / 100);
         scroll.setLocation(panel1.getWidth() * 2 / 100, panel1.getHeight() * 2 / 100);
+
+        JLabel cantCaracteres = new JLabel("0 / 250");
+        cantCaracteres.setSize(panel1.getWidth() * 15 / 100, (panel1.getHeight() * 5) / 100);
+        cantCaracteres.setLocation((panel1.getWidth() - cantCaracteres.getWidth()) * 98 / 100, (panel1.getHeight() - cantCaracteres.getHeight()) * 85 / 100);
+        cantCaracteres.setFont(new Font("Times New Roman", Font.BOLD, 20));
+        panel1.add(cantCaracteres);
+
+        texto.addKeyListener(new KeyListener() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                cantCaracteres.setText(texto.getText().length() + " / 250");
+                if (texto.getText().length() >= 250) {
+                    cantCaracteres.setForeground(Color.red);
+                    texto.setText(texto.getText().substring(0, 250));
+                    e.consume();
+                } else {
+                    cantCaracteres.setForeground(Color.BLACK);
+                }
+            }
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+                cantCaracteres.setText(texto.getText().length() + " / 250");
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+                cantCaracteres.setText(texto.getText().length() + " / 250");
+            }
+        });
+
         panel1.add(scroll);
 
         //Tipo de letra del texto
@@ -305,6 +340,7 @@ public class Inicio extends JFrame {
             }
         });
         panel1.add(btnLimpiar);
+
         getContentPane().add(panel1);
 //Fin del acomodo del panel 1  
 
@@ -558,7 +594,6 @@ public class Inicio extends JFrame {
 
     public void leerTexto() {
         try {
-            hablar = new LeerTTS();
             hablar.leerTexto(getTexto());
         } catch (Exception ex) {
             Logger.getLogger(Inicio.class.getName()).log(Level.SEVERE, null, ex);
@@ -568,45 +603,49 @@ public class Inicio extends JFrame {
     public void iniciarDictado() {
         if (comandos.getEstadoComandos()) {
             comandos.suspenerComandos();
+            hablar.leerTexto("Iniciando dictado");
             voz.iniciarDictado();
+            hablar.leerTexto("Dictado terminado");
             comandos.reaunudarComandos();
         } else {
+            hablar.leerTexto("Iniciando dictado");
             voz.iniciarDictado();
+            hablar.leerTexto("Dictado terminado");
         }
     }
 
     public void iniciarComandos() {
-        comandos.iniciarComandos();
-        estadoComandos = true;
-        notificarUsoComandos();
+        if (!comandos.getEstadoComandos()) {
+            comandos.iniciarComandos();
+            estadoComandos = true;
+            notificarUsoComandos();
+        }
     }
 
     public void finalizarComandos() {
-        comandos.finalizarUsoComandos();
-        estadoComandos = false;
+        if (comandos.getEstadoComandos()) {
+            comandos.finalizarUsoComandos();
+            estadoComandos = false;
+            hablar.leerTexto("Comandos desactivados");
+            JOptionPane.showMessageDialog(null, "Comandos Finalizados", "Alerta", JOptionPane.INFORMATION_MESSAGE);
+        }
     }
 
     private void notificarUsoComandos() {
-        if (FileManager.leerConfiguracion(3).equals("1")) {
-            comandos.iniciarComandos();
-            estadoComandos = true;
             JOptionPane.showMessageDialog(this, "Comandos de Voz activados");
-            vozSaludar();
-        }
+            hablar.leerTexto("Comandos Activados");
     }
-    
+
     public void vozSalir() {
         try {
-            hablar = new LeerTTS();
             hablar.leerTexto("Goodbye");
         } catch (Exception ex) {
             Logger.getLogger(Inicio.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     public void vozSaludar() {
         try {
-            hablar = new LeerTTS();
             hablar.leerTexto("Hola, Esto es The Voice of Braile.");
         } catch (Exception ex) {
             Logger.getLogger(Inicio.class.getName()).log(Level.SEVERE, null, ex);

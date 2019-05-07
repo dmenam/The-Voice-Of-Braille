@@ -17,7 +17,6 @@ public class Comandos_Voz extends ResultAdapter {
     static Recognizer recognizer;
     private String gst;
     private Inicio inicio;
-    private Voz voz;
     private boolean estado;
 
     public Comandos_Voz(Inicio inicio) {
@@ -82,7 +81,9 @@ public class Comandos_Voz extends ResultAdapter {
                     break;
                 case "Desactivar comandos de voz":
                     System.out.println("caso " + args);
-                    finalizarUsoComandos();
+                    inicio.finalizarComandos();
+                    String config[] = {FileManager.leerConfiguracion(0), "", FileManager.leerConfiguracion(2), "0"};
+                    FileManager.escribirConfiguracion(config);
                     System.out.println("Comandos desactivados");
                     break;
                 case "Guardar texto":

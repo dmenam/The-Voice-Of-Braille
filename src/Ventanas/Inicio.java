@@ -96,7 +96,7 @@ public class Inicio extends JFrame {
         setLocationRelativeTo(null);
         setVisible(true);
         if (FileManager.leerConfiguracion(3).equals("1")) {
-            iniciarComandos();
+            reaunudarComandos();
         }
     }
 
@@ -112,8 +112,9 @@ public class Inicio extends JFrame {
         //----------------------------------------------------------------------
         voz = new Voz(this);
         comandos = new Comandos_Voz(this);
-        hablar = new LeerTTS();
+        comandos.iniciarComandos();
         estadoComandos = false;
+        hablar = new LeerTTS();
 
         titulo = new JLabel("The Voice Of Braille");
         titulo.setSize((ventana.width * 60) / 100, (ventana.height * 15) / 100);
@@ -492,18 +493,25 @@ public class Inicio extends JFrame {
 
     public boolean imprimir() {
         if (ino.getConexion()) {
-            try {
-                ino.cargarPapel();
-                System.out.println("Cargando papel");
-                braille.imprimirBraille(texto.getText(), 30);
-                //JOptionPane.showMessageDialog(this, "Imprimiendo...");
-                ino.expulsarPapel();
-                System.out.print("Sacando papel....");
-                return true;
-            } catch (Exception e) {
+            if (ino.getEstado()) {
+                try {
+                    //ino.cargarPapel();
+                    System.out.println("Cargando papel");
+                    braille.imprimirBraille(texto.getText(), 30);
+                    //JOptionPane.showMessageDialog(this, "Imprimiendo...");
+                    //ino.expulsarPapel();
+                    System.out.print("Sacando papel....");
+                    return true;
+                } catch (Exception e) {
+                    return false;
+                }
+            } else {
+                hablar("Error en la impresion, la impresora podria estar apagada, presione enter para continuar");
+                JOptionPane.showMessageDialog(null, "La impresora podria encontrarse apagada...", "Error de Impresión", JOptionPane.ERROR_MESSAGE);
                 return false;
             }
         } else {
+            hablar("Error en la conexion con la impresora, verifique su conexion, presione enter para continuar");
             JOptionPane.showMessageDialog(null, "Verifique su conexion, No es posible conectarse con Arduino", "Verifique su conexión", JOptionPane.ERROR_MESSAGE);
             return false;
         }
@@ -622,23 +630,32 @@ public class Inicio extends JFrame {
         }
     }
 
-    public void finalizarComandos() {
+    public void suspenderComandos() {
         if (comandos.getEstadoComandos()) {
-            comandos.finalizarUsoComandos();
+            comandos.suspenerComandos();
             estadoComandos = false;
             hablar.leerTexto("Comandos desactivados");
-            JOptionPane.showMessageDialog(null, "Comandos Finalizados", "Alerta", JOptionPane.INFORMATION_MESSAGE);
+            //JOptionPane.showMessageDialog(null, "Comandos Finalizados", "Alerta", JOptionPane.INFORMATION_MESSAGE);
+        }
+    }
+
+    public void reaunudarComandos() {
+        if (!comandos.getEstadoComandos()) {
+            comandos.reaunudarComandos();
+            estadoComandos = true;
+            hablar("Comandos activados");
         }
     }
 
     private void notificarUsoComandos() {
-            JOptionPane.showMessageDialog(this, "Comandos de Voz activados");
-            hablar.leerTexto("Comandos Activados");
+        //JOptionPane.showMessageDialog(this, "Comandos de Voz activados");
+        hablar.leerTexto("Comandos Activados");
     }
 
     public void vozSalir() {
         try {
-            hablar.leerTexto("Goodbye");
+            hablar.leerTexto("Hasta pronto");
+            hablar.finalizarTodo();
         } catch (Exception ex) {
             Logger.getLogger(Inicio.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -650,5 +667,22 @@ public class Inicio extends JFrame {
         } catch (Exception ex) {
             Logger.getLogger(Inicio.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    public void hablar(String texto) {
+        hablar.leerTexto(texto);
+    }
+
+    public void setEstadoArduino(boolean estado) {
+        ino.setEstado(estado);
+        if (estado) {
+            hablar("impresora encendida");
+        } else {
+            hablar("impresora apagada");
+        }
+    }
+
+    public boolean getEstadoArduino() {
+        return ino.getEstado();
     }
 }

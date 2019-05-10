@@ -17,6 +17,7 @@ public final class Arduino extends PanamaHitek_Arduino {
     private int BAUDIOS = 9600;
     private String dato;
     private boolean conexion;
+    private boolean estado = false;
 
     public Arduino() {
         this.puerto = null;
@@ -49,8 +50,12 @@ public final class Arduino extends PanamaHitek_Arduino {
 
     public boolean enviarDato(String dato) {
         try {
-            this.sendData(dato);
-            return true;
+            if(estado) {
+                this.sendData(dato);
+                return true;
+            } else {
+                return false;
+            }
         } catch (ArduinoException | SerialPortException ex) {
             Logger.getLogger(Arduino.class.getName()).log(Level.SEVERE, null, ex);
             return false;
@@ -94,4 +99,13 @@ public final class Arduino extends PanamaHitek_Arduino {
     public boolean getConexion() {
         return conexion;
     }
+    
+    public boolean getEstado() {
+        return estado;
+    }
+    
+    public void setEstado(boolean estado) {
+        this.estado = estado;
+    }
+    
 }

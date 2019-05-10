@@ -20,13 +20,21 @@ public class Comandos_Voz extends ResultAdapter {
     private boolean estado;
 
     public Comandos_Voz(Inicio inicio) {
-        this.inicio = inicio;
-        estado = false;
+        try {
+            this.inicio = inicio;
+            estado = false;
+            recognizer = Central.createRecognizer(new EngineModeDesc(Locale.ROOT));
+        } catch (IllegalArgumentException ex) {
+            Logger.getLogger(Comandos_Voz.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (EngineException ex) {
+            Logger.getLogger(Comandos_Voz.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SecurityException ex) {
+            Logger.getLogger(Comandos_Voz.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     public void iniciarComandos() {
         try {
-            recognizer = Central.createRecognizer(new EngineModeDesc(Locale.ROOT));
             // Poner en marcha el reconocedor
             recognizer.allocate();
 
@@ -71,9 +79,11 @@ public class Comandos_Voz extends ResultAdapter {
             switch (args) {
                 case "Encender impresora":
                     System.out.println("caso " + args);
+                    inicio.setEstadoArduino(true);
                     break;
                 case "Apagar impresora":
                     System.out.println("caso " + args);
+                    inicio.setEstadoArduino(false);
                     break;
                 case "Imprimir texto":
                     System.out.println("caso " + args);
@@ -81,10 +91,17 @@ public class Comandos_Voz extends ResultAdapter {
                     break;
                 case "Desactivar comandos de voz":
                     System.out.println("caso " + args);
-                    inicio.finalizarComandos();
-                    String config[] = {FileManager.leerConfiguracion(0), "", FileManager.leerConfiguracion(2), "0"};
-                    FileManager.escribirConfiguracion(config);
-                    System.out.println("Comandos desactivados");
+                    if (estado) {
+                        inicio.suspenderComandos();
+                        String config[] = {FileManager.leerConfiguracion(0), "", FileManager.leerConfiguracion(2), "0"};
+                        FileManager.escribirConfiguracion(config);
+                    }
+                    break;
+                case "Activar comandos de voz":
+                    System.out.println("caso" + args);
+                    if (!estado) {
+                        inicio.reaunudarComandos();
+                    }
                     break;
                 case "Guardar texto":
                     System.out.println("caso " + args);
@@ -93,9 +110,9 @@ public class Comandos_Voz extends ResultAdapter {
                 case "Iniciar dictado":
                     System.out.println("caso " + args);
                     recognizer.releaseFocus();
-                    JOptionPane.showMessageDialog(null, "Comenzara el dictado...");
+                    //JOptionPane.showMessageDialog(null, "Comenzara el dictado...");
                     inicio.iniciarDictado();
-                    JOptionPane.showMessageDialog(null, "Finalizo el dictado...");
+                    //JOptionPane.showMessageDialog(null, "Finalizo el dictado...");
                     recognizer.requestFocus();
                     break;
                 case "Leer texto":
@@ -125,12 +142,16 @@ public class Comandos_Voz extends ResultAdapter {
     public void suspenerComandos() {
         recognizer.suspend();
         recognizer.releaseFocus();
+        estado = false;
+        System.out.println("Comandos suspendidos");
     }
 
     public void reaunudarComandos() {
         try {
             recognizer.requestFocus();
             recognizer.resume();
+            estado = true;
+            System.out.println("Comandos reaunudados");
         } catch (AudioException ex) {
             Logger.getLogger(Comandos_Voz.class.getName()).log(Level.SEVERE, null, ex);
         } catch (EngineStateError ex) {

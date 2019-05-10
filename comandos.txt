@@ -9,13 +9,15 @@ public <sentence> =
 [<dato4>]
 [<dato5>]
 [<dato6>]
-[<dato7>];
+[<dato7>]
+[<dato8>];
  
 <dato0>=Encender impresora;
 <dato1>=Apagar impresora;
 <dato2>=Imprimir texto;
 <dato3>=Desactivar comandos de voz;
-<dato4>=Guardar texto;
-<dato5>=Salir;
-<dato6>=Iniciar dictado;
-<dato7>=Leer texto;
+<dato4>=Activar comandos de voz;
+<dato5>=Guardar texto;
+<dato6>=Salir;
+<dato7>=Iniciar dictado;
+<dato8>=Leer texto;

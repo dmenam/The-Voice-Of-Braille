@@ -259,10 +259,10 @@ public class Configuracion extends JDialog {
                 btnAplicar.setEnabled(false);
                 btnAceptar.setEnabled(true);
                 if (comandos) {
-                    inicio.iniciarComandos();
+                    inicio.reaunudarComandos();
                     comandos = false;
                 } else {
-                    inicio.finalizarComandos();
+                    inicio.suspenderComandos();
                     comandos = false;
                 }
             }
@@ -285,10 +285,10 @@ public class Configuracion extends JDialog {
                     if (resp == JOptionPane.YES_OPTION) {
                         FileManager.escribirConfiguracion(config);
                         if (comandos) {
-                            inicio.iniciarComandos();
+                            inicio.reaunudarComandos();
                             comandos = false;
                         } else {
-                            inicio.finalizarComandos();
+                            inicio.suspenderComandos();
                             comandos = false;
                         }
                         dispose();

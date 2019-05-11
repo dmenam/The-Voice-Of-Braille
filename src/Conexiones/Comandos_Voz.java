@@ -112,6 +112,7 @@ public class Comandos_Voz extends ResultAdapter {
                     recognizer.releaseFocus();
                     //JOptionPane.showMessageDialog(null, "Comenzara el dictado...");
                     inicio.iniciarDictado();
+                    inicio.contarCarcateres();
                     //JOptionPane.showMessageDialog(null, "Finalizo el dictado...");
                     recognizer.requestFocus();
                     break;

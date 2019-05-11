@@ -261,9 +261,11 @@ public class Configuracion extends JDialog {
                 if (comandos) {
                     inicio.reaunudarComandos();
                     comandos = false;
+                    //inicio.hablar("comandos Activados");
                 } else {
                     inicio.suspenderComandos();
                     comandos = false;
+                    //inicio.hablar("comandos desactivados");
                 }
             }
         });
@@ -287,9 +289,11 @@ public class Configuracion extends JDialog {
                         if (comandos) {
                             inicio.reaunudarComandos();
                             comandos = false;
+                            //inicio.hablar("comandos Activados");
                         } else {
                             inicio.suspenderComandos();
                             comandos = false;
+                            //inicio.hablar("comandos desactivados");
                         }
                         dispose();
                     }

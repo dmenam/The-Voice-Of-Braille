@@ -16,6 +16,8 @@ import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ContainerEvent;
+import java.awt.event.ContainerListener;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -63,6 +65,7 @@ public class Inicio extends JFrame {
     private JLabel fondo, titulo;
     private JLabel BTdispositivo;
     private JLabel JLestado;
+    private JLabel cantCaracteres;
 
     private JComboBox CBdispositivosBT;
 
@@ -97,6 +100,7 @@ public class Inicio extends JFrame {
         setVisible(true);
         if (FileManager.leerConfiguracion(3).equals("1")) {
             reaunudarComandos();
+            hablar("comandos activados");
         }
     }
 
@@ -228,7 +232,7 @@ public class Inicio extends JFrame {
         scroll.setSize(panel1.getWidth() * 95 / 100, (panel1.getHeight() * 85) / 100);
         scroll.setLocation(panel1.getWidth() * 2 / 100, panel1.getHeight() * 2 / 100);
 
-        JLabel cantCaracteres = new JLabel("0 / 250");
+        cantCaracteres = new JLabel("0 / 250");
         cantCaracteres.setSize(panel1.getWidth() * 15 / 100, (panel1.getHeight() * 5) / 100);
         cantCaracteres.setLocation((panel1.getWidth() - cantCaracteres.getWidth()) * 98 / 100, (panel1.getHeight() - cantCaracteres.getHeight()) * 85 / 100);
         cantCaracteres.setFont(new Font("Times New Roman", Font.BOLD, 20));
@@ -257,7 +261,6 @@ public class Inicio extends JFrame {
                 cantCaracteres.setText(texto.getText().length() + " / 250");
             }
         });
-
         panel1.add(scroll);
 
         //Tipo de letra del texto
@@ -409,7 +412,19 @@ public class Inicio extends JFrame {
                         braille.setArduino(ino);
                         JLestado.setText("Estado: Conectado");
                         btnConectar.setText("Desconectar");
-                        btnImprimir.setEnabled(true);
+                        int opc = JOptionPane.showConfirmDialog(null, "¿Desea encender la impresora?", "ATENCIÓN", JOptionPane.YES_NO_OPTION);
+                        switch(opc) {
+                            case JOptionPane.YES_OPTION:
+                                ino.setEstado(true);
+                                btnImprimir.setEnabled(true);
+                                break;
+                            case JOptionPane.NO_OPTION:
+                                ino.setEstado(false);
+                                break;
+                            default:
+                                ino.setEstado(false);
+                                break;
+                        }
                     }
                     return;
                 } else {
@@ -626,7 +641,7 @@ public class Inicio extends JFrame {
         if (!comandos.getEstadoComandos()) {
             comandos.iniciarComandos();
             estadoComandos = true;
-            notificarUsoComandos();
+            hablar("Comandos activados");
         }
     }
 
@@ -645,11 +660,6 @@ public class Inicio extends JFrame {
             estadoComandos = true;
             hablar("Comandos activados");
         }
-    }
-
-    private void notificarUsoComandos() {
-        //JOptionPane.showMessageDialog(this, "Comandos de Voz activados");
-        hablar.leerTexto("Comandos Activados");
     }
 
     public void vozSalir() {
@@ -684,5 +694,15 @@ public class Inicio extends JFrame {
 
     public boolean getEstadoArduino() {
         return ino.getEstado();
+    }
+    
+    public void contarCarcateres() {
+        cantCaracteres.setText(texto.getText().length() + " / 250");
+        if (texto.getText().length() >= 250) {
+            cantCaracteres.setForeground(Color.red);
+            texto.setText(texto.getText().substring(0, 250));
+        } else {
+            cantCaracteres.setForeground(Color.BLACK);
+        }
     }
 }

@@ -195,8 +195,6 @@ public class Braille {
         "00",
         "00"};//0
 
-    public boolean bandera;
-
     private Arduino ino;
 
     public Braille(Arduino ino) {

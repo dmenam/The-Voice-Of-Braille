@@ -17,7 +17,7 @@ public class Principal {
         //Configuracion c = new Configuracion();
         //Archivo a = new Archivo();
         //Creditos c = new Creditos();
-        //Ayuda a = new Ayuda(i);
+        Ayuda a = new Ayuda(i);
         //Comandos_Voz c = new Comandos_Voz();       
         //c.setInicio(i);
         //Pruebas pruebas = new Pruebas();

@@ -98,9 +98,12 @@ public class Inicio extends JFrame {
         inicializar(ventana);
         setLocationRelativeTo(null);
         setVisible(true);
-        if (FileManager.leerConfiguracion(3).equals("1")) {
+        if (FileManager.leerConfiguracion(3).equals("0")) {
+            suspenderComandos();
+            //hablar("comandos desactivados");
+        } else {
             reaunudarComandos();
-            hablar("comandos activados");
+            //hablar("comandos activados");
         }
     }
 
@@ -510,11 +513,11 @@ public class Inicio extends JFrame {
         if (ino.getConexion()) {
             if (ino.getEstado()) {
                 try {
-                    //ino.cargarPapel();
+                    ino.cargarPapel();
                     System.out.println("Cargando papel");
                     braille.imprimirBraille(texto.getText(), 30);
                     //JOptionPane.showMessageDialog(this, "Imprimiendo...");
-                    //ino.expulsarPapel();
+                    ino.expulsarPapel();
                     System.out.print("Sacando papel....");
                     return true;
                 } catch (Exception e) {

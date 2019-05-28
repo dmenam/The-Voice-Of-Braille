@@ -25,12 +25,14 @@ public class Ayuda extends JDialog{
             + "Apagar impresora: Deshabilita el uso de la impresora. \n"
             + "Imprimir texto: Imprime el texto que hay en el campo de texto \n"
             + "Desactivar comandos de Voz: Desactiva los comandos de voz \n"
+            + "Activar comandos de Voz: Activa los comandos de voz\n"
             + "Guardar Texto: Abre la ventana para guardar el texto introducido en el campo de texto \n"
             + "Salir: Finaliza la ejecución del programa \n"
             + "Iniciar dictado: Inicia el dictado por voz.\n"
             + "\n NOTA: EL DICTADO DEBE SER SEGUIDO, SI SE HACE UNA PAUSA"
             + " PROLONGADA, DEBERA VOLVER A COMENZAR EL DICTADO "
-            + " POR VOZ.";
+            + " POR VOZ.\n"
+            + "Leer texto: Lee el texto de la pantalla principal\n";
    
     public Ayuda(JFrame frame){
         super(frame, true);
@@ -72,7 +74,7 @@ public class Ayuda extends JDialog{
         
         txtComandos = new JTextArea();
         txtComandos.setBounds(10, 10, ventana.width * 95 / 100, ventana.height * 75 / 100);
-        txtComandos.setFont(new Font("Times New Roman", Font.PLAIN, 28));
+        txtComandos.setFont(new Font("Times New Roman", Font.PLAIN, 25));
         txtComandos.setLocation((ventana.width - txtComandos.getWidth()) / 2, (ventana.height - txtComandos.getHeight()) * 95 / 100);
         txtComandos.setEditable(false);
         txtComandos.setOpaque(false);

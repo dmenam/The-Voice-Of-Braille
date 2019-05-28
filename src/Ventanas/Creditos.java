@@ -29,8 +29,8 @@ public class Creditos extends JDialog {
     private JLabel creditosAplicacion;
     private JLabel credito1;
     private JLabel credito2;
-    private JLabel creditosFondo;
-    private JLabel linkFondo;
+    private JLabel creditosFondo, encuesta;
+    private JLabel linkFondo, linkEncuesta;
 
     public Creditos(JFrame frame) {
         super(frame, true);
@@ -86,6 +86,54 @@ public class Creditos extends JDialog {
         credito2.setLocation((ventana.width - credito2.getWidth()) * 20 / 100, (ventana.height - credito2.getHeight()) * 30 / 100);
         getContentPane().add(credito2);
 
+        encuesta = new JLabel();
+        encuesta.setText("Encuesta de Satisfacción");
+        encuesta.setBounds(10, 10, ventana.width, ventana.height * 10 / 100);
+        encuesta.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        encuesta.setFont(new Font("Times New Roman", Font.PLAIN, 28));
+        encuesta.setLocation((ventana.width - encuesta.getWidth()) * 20 / 100, (ventana.height - encuesta.getHeight()) * 45 / 100);
+        getContentPane().add(encuesta);
+        
+        linkEncuesta = new JLabel();
+        linkEncuesta.setText("https://docs.google.com/forms/d/e/1FAIpQLSfnR14YxR9cvrn8HExmD-srlh0181NfpQrOetmQKoQyLISxMg/viewform");
+        linkEncuesta.setForeground(Color.blue);
+        linkEncuesta.setBounds(10, 10, ventana.width, ventana.height * 10 / 100);
+        linkEncuesta.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        //Fuente de subrayado--------------------------------------------------//
+        Font subrayado = linkEncuesta.getFont();
+        Map attributes = subrayado.getAttributes();
+        attributes.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
+        //---------------------------------------------------------------------//
+        linkEncuesta.setFont(subrayado.deriveFont(attributes));
+        linkEncuesta.setLocation((ventana.width - linkEncuesta.getWidth()) * 20 / 100, (ventana.height - linkEncuesta.getHeight()) * 50 / 100);
+        linkEncuesta.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (java.awt.Desktop.isDesktopSupported()) {
+                    try {
+                        Desktop dk = Desktop.getDesktop();
+                        dk.browse(new URI("https://docs.google.com/forms/d/e/1FAIpQLSfnR14YxR9cvrn8HExmD-srlh0181NfpQrOetmQKoQyLISxMg/viewform"));
+                    } catch (IOException ex) {
+                        Logger.getLogger(Creditos.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (URISyntaxException ex) {
+                        Logger.getLogger(Creditos.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            }
+            
+            @Override
+            public void mouseEntered(MouseEvent e){
+                linkEncuesta.setForeground(new Color(50, 143, 194));
+            }
+            
+            @Override
+            public void mouseExited(MouseEvent e) {
+                linkEncuesta.setForeground(Color.BLUE);
+            }
+        });
+        
+        getContentPane().add(linkEncuesta);
+        
         creditosFondo = new JLabel();
         creditosFondo.setText("Fondo de:");
         creditosFondo.setBounds(10, 10, ventana.width, ventana.height * 10 / 100);
@@ -101,9 +149,9 @@ public class Creditos extends JDialog {
         linkFondo.setBounds(10, 10, ventana.width, ventana.height * 10 / 100);
         linkFondo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         //Fuente de subrayado--------------------------------------------------//
-        Font subrayado = linkFondo.getFont();
-        Map attributes = subrayado.getAttributes();
-        attributes.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
+        //Font subrayado2 = linkFondo.getFont();
+        //Map attributes2 = subrayado2.getAttributes();
+        //attributes.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
         //---------------------------------------------------------------------//
         linkFondo.setFont(subrayado.deriveFont(attributes));
         linkFondo.setLocation((ventana.width - linkFondo.getWidth()) * 20 / 100, (ventana.height - linkFondo.getHeight()) * 75 / 100);

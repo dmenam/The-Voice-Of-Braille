@@ -21,10 +21,13 @@ import java.awt.event.ContainerListener;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.imageio.ImageIO;
 
 import javax.swing.BorderFactory;
 import javax.swing.Icon;
@@ -88,7 +91,14 @@ public class Inicio extends JFrame {
         setSize(pantalla.width, pantalla.height);
         Dimension ventana = getSize();
         //Icono
-        setIconImage(new ImageIcon(getClass().getResource("../Imagenes/Icono_VoB.png")).getImage());
+        //setIconImage(new ImageIcon(getClass().getResource("../Imagenes/Icono_VoB.png")).getImage());
+        try {
+            BufferedImage imglogo;
+            imglogo = ImageIO.read(getClass().getClassLoader().getResource("Imagenes/Icono_VoB.png"));
+            setIconImage(imglogo);
+        } catch (IOException ex) {
+            Logger.getLogger(Inicio.class.getName()).log(Level.SEVERE, null, ex);
+        }
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         getContentPane().setLayout(null);
         setExtendedState(MAXIMIZED_BOTH);
@@ -100,10 +110,13 @@ public class Inicio extends JFrame {
         setVisible(true);
         if (FileManager.leerConfiguracion(3).equals("0")) {
             suspenderComandos();
+            this.estadoComandos = false;
             //hablar("comandos desactivados");
-        } else {
-            reaunudarComandos();
-            //hablar("comandos activados");
+        }
+        if (FileManager.leerConfiguracion(3).equals("1")) {
+            //reaunudarComandos();
+            this.estadoComandos = true;
+            hablar("comandos activados");
         }
     }
 
@@ -120,7 +133,7 @@ public class Inicio extends JFrame {
         voz = new Voz(this);
         comandos = new Comandos_Voz(this);
         comandos.iniciarComandos();
-        estadoComandos = false;
+        this.estadoComandos = false;
         hablar = new LeerTTS();
 
         titulo = new JLabel("The Voice Of Braille");
@@ -416,7 +429,7 @@ public class Inicio extends JFrame {
                         JLestado.setText("Estado: Conectado");
                         btnConectar.setText("Desconectar");
                         int opc = JOptionPane.showConfirmDialog(null, "¿Desea encender la impresora?", "ATENCIÓN", JOptionPane.YES_NO_OPTION);
-                        switch(opc) {
+                        switch (opc) {
                             case JOptionPane.YES_OPTION:
                                 ino.setEstado(true);
                                 btnImprimir.setEnabled(true);
@@ -491,7 +504,9 @@ public class Inicio extends JFrame {
 
         fondo = new JLabel();
         fondo.setSize(ventana.width, ventana.height);
-        ImageIcon imagenFondo = new ImageIcon(getClass().getResource("../Imagenes/fondo.jpg"));
+        //ImageIcon imagenFondo = new ImageIcon(getClass().getResource("../Imagenes/fondo.jpg"));
+        URL urlDelFondo = Splash.class.getClassLoader().getResource("Imagenes/fondo.jpg");
+        ImageIcon imagenFondo = new ImageIcon(urlDelFondo);
         Icon iconoFondo = new ImageIcon(imagenFondo.getImage().getScaledInstance(ventana.width, ventana.height, Image.SCALE_AREA_AVERAGING));
         fondo.setIcon(iconoFondo);
         getContentPane().add(fondo);
@@ -643,7 +658,6 @@ public class Inicio extends JFrame {
     public void iniciarComandos() {
         if (!comandos.getEstadoComandos()) {
             comandos.iniciarComandos();
-            estadoComandos = true;
             hablar("Comandos activados");
         }
     }
@@ -687,18 +701,22 @@ public class Inicio extends JFrame {
     }
 
     public void setEstadoArduino(boolean estado) {
-        ino.setEstado(estado);
-        if (estado) {
-            hablar("impresora encendida");
+        if (ino.getConexion()) {
+            ino.setEstado(estado);
+            if (estado) {
+                hablar("impresora encendida");
+            } else {
+                hablar("impresora apagada");
+            }
         } else {
-            hablar("impresora apagada");
+            hablar("Sin conexion con la impresora, compruebe su conexion");
         }
     }
 
     public boolean getEstadoArduino() {
         return ino.getEstado();
     }
-    
+
     public void contarCarcateres() {
         cantCaracteres.setText(texto.getText().length() + " / 250");
         if (texto.getText().length() >= 250) {

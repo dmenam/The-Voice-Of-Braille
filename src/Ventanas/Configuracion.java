@@ -9,7 +9,13 @@ import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
+import java.net.URL;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.imageio.ImageIO;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
@@ -66,7 +72,14 @@ public class Configuracion extends JDialog {
         config = new String[4];
 
         //Icono
-        setIconImage(new ImageIcon(getClass().getResource("../Imagenes/Icono_VoB.png")).getImage());
+        //setIconImage(new ImageIcon(getClass().getResource("../Imagenes/Icono_VoB.png")).getImage());
+        try {
+            BufferedImage imglogo;
+            imglogo = ImageIO.read(getClass().getClassLoader().getResource("Imagenes/Icono_VoB.png"));
+            setIconImage(imglogo);
+        } catch (IOException ex) {
+            Logger.getLogger(Inicio.class.getName()).log(Level.SEVERE, null, ex);
+        }
         //Tamaño de la pantalla
         Dimension pantalla;
         pantalla = Toolkit.getDefaultToolkit().getScreenSize();
@@ -329,7 +342,9 @@ public class Configuracion extends JDialog {
 //Inicializar el fondo
         fondo = new JLabel();
         fondo.setSize(ventana.width, ventana.height);
-        ImageIcon imagenFondo = new ImageIcon(getClass().getResource("../Imagenes/Fondo.jpg"));
+        //ImageIcon imagenFondo = new ImageIcon(getClass().getResource("../Imagenes/Fondo.jpg"));
+        URL urlDelFondo = Splash.class.getClassLoader().getResource("Imagenes/fondo.jpg");
+        ImageIcon imagenFondo = new ImageIcon(urlDelFondo);
         Icon iconoFondo = new ImageIcon(imagenFondo.getImage().getScaledInstance(fondo.getWidth(), fondo.getHeight(), Image.SCALE_DEFAULT));
         fondo.setIcon(iconoFondo);
         getContentPane().add(fondo);

@@ -33,12 +33,12 @@ public class Ayuda extends JDialog{
             + "Desactivar comandos de Voz: Desactiva los comandos de voz \n"
             + "Activar comandos de Voz: Activa los comandos de voz\n"
             + "Guardar Texto: Abre la ventana para guardar el texto introducido en el campo de texto \n"
-            + "Salir: Finaliza la ejecución del programa \n"
+            + "Salir de la aplicacion: Finaliza la ejecución del programa \n"
+            + "Leer texto introducido: Lee el texto de la pantalla principal\n"
             + "Iniciar dictado: Inicia el dictado por voz.\n"
             + "\n NOTA: EL DICTADO DEBE SER SEGUIDO, SI SE HACE UNA PAUSA"
             + " PROLONGADA, DEBERA VOLVER A COMENZAR EL DICTADO "
-            + " POR VOZ.\n"
-            + "Leer texto: Lee el texto de la pantalla principal\n";
+            + " POR VOZ.\n";
    
     public Ayuda(JFrame frame){
         super(frame, true);

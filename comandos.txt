@@ -14,10 +14,10 @@ public <sentence> =
  
 <dato0>=Encender impresora;
 <dato1>=Apagar impresora;
-<dato2>=Imprimir texto;
+<dato2>=Imprimir archivo de texto;
 <dato3>=Desactivar comandos de voz;
 <dato4>=Activar comandos de voz;
-<dato5>=Guardar texto;
+<dato5>=Guardar archivo de texto;
 <dato6>=Salir de la aplicacion;
-<dato7>=Iniciar dictado;
+<dato7>=Iniciar dictado por voz;
 <dato8>=Leer texto introducido;

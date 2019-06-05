@@ -29,13 +29,13 @@ public class Ayuda extends JDialog{
     private String tituloC = "Comandos disponibles";
     private String comandos = "Encender impresora: Habilita el uso de la impresora. \n"
             + "Apagar impresora: Deshabilita el uso de la impresora. \n"
-            + "Imprimir texto: Imprime el texto que hay en el campo de texto \n"
+            + "Imprimir archivo de texto: Imprime el texto que hay en el campo de texto \n"
             + "Desactivar comandos de Voz: Desactiva los comandos de voz \n"
             + "Activar comandos de Voz: Activa los comandos de voz\n"
-            + "Guardar Texto: Abre la ventana para guardar el texto introducido en el campo de texto \n"
+            + "Guardar archivo de Texto: Abre la ventana para guardar el texto introducido en el campo de texto \n"
             + "Salir de la aplicacion: Finaliza la ejecución del programa \n"
             + "Leer texto introducido: Lee el texto de la pantalla principal\n"
-            + "Iniciar dictado: Inicia el dictado por voz.\n"
+            + "Iniciar dictado por voz: Inicia el dictado por voz.\n"
             + "\n NOTA: EL DICTADO DEBE SER SEGUIDO, SI SE HACE UNA PAUSA"
             + " PROLONGADA, DEBERA VOLVER A COMENZAR EL DICTADO "
             + " POR VOZ.\n";

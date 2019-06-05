@@ -87,7 +87,7 @@ public class Comandos_Voz extends ResultAdapter {
                     inicio.hablar("Comando reconocido. " + args);                    
                     inicio.setEstadoArduino(false);
                     break;
-                case "Imprimir texto":
+                case "Imprimir archivo de texto":
                     System.out.println("caso " + args);
                     inicio.hablar("Comando reconocido. " + args);
                     inicio.imprimir();
@@ -108,12 +108,12 @@ public class Comandos_Voz extends ResultAdapter {
                         inicio.reaunudarComandos();
                     }
                     break;
-                case "Guardar texto":
+                case "Guardar archivo de texto":
                     System.out.println("caso " + args);
                     inicio.hablar("Comando reconocido. " + args);
                     inicio.guardarArchivo();
                     break;
-                case "Iniciar dictado":
+                case "Iniciar dictado por voz":
                     System.out.println("caso " + args);
                     inicio.hablar("Comando reconocido. " + args);
                     recognizer.releaseFocus();

@@ -81,16 +81,19 @@ public class Comandos_Voz extends ResultAdapter {
                     System.out.println("caso " + args);
                     inicio.hablar("Comando reconocido. " + args);
                     inicio.setEstadoArduino(true);
+                    args = "";
                     break;
                 case "Apagar impresora":
                     System.out.println("caso " + args);
                     inicio.hablar("Comando reconocido. " + args);                    
                     inicio.setEstadoArduino(false);
+                    args = "";
                     break;
                 case "Imprimir archivo de texto":
                     System.out.println("caso " + args);
                     inicio.hablar("Comando reconocido. " + args);
                     inicio.imprimir();
+                    args = "";
                     break;
                 case "Desactivar comandos de voz":
                     System.out.println("caso " + args);
@@ -100,6 +103,7 @@ public class Comandos_Voz extends ResultAdapter {
                         String config[] = {FileManager.leerConfiguracion(0), "", FileManager.leerConfiguracion(2), "0"};
                         FileManager.escribirConfiguracion(config);
                     }
+                    args = "";
                     break;
                 case "Activar comandos de voz":
                     System.out.println("caso" + args);
@@ -107,11 +111,13 @@ public class Comandos_Voz extends ResultAdapter {
                     if (!estado) {
                         inicio.reaunudarComandos();
                     }
+                    args = "";
                     break;
                 case "Guardar archivo de texto":
                     System.out.println("caso " + args);
                     inicio.hablar("Comando reconocido. " + args);
                     inicio.guardarArchivo();
+                    args = "";
                     break;
                 case "Iniciar dictado por voz":
                     System.out.println("caso " + args);
@@ -122,11 +128,13 @@ public class Comandos_Voz extends ResultAdapter {
                     inicio.contarCarcateres();
                     //JOptionPane.showMessageDialog(null, "Finalizo el dictado...");
                     recognizer.requestFocus();
+                    args = "";
                     break;
                 case "Leer texto introducido":
                     System.out.println("caso " + args);
                     inicio.hablar("Comando reconocido. " + args);
                     inicio.leerTexto();
+                    args = "";
                     break;
                 case "Salir de la aplicacion":
                     System.out.println("caso " + args);

@@ -112,7 +112,7 @@ public class Pruebas extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnImprimirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnImprimirActionPerformed
-        braille.imprimirBraille(txtImprimir.getText(), 29);
+        braille.imprimirBraille(txtImprimir.getText(), 2);
     }//GEN-LAST:event_btnImprimirActionPerformed
 
     private void btnConectarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConectarActionPerformed

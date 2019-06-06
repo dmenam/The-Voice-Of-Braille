@@ -196,20 +196,22 @@ public class Braille {
         "00"};//0
 
     private Arduino ino;
+    private int saltoLinea = 1;
 
     public Braille(Arduino ino) {
         this.ino = ino;
     }
 
     public Braille() {
-        
+
     }
 
     public void imprimirBraille(String texto, int cantCaracteres) {
-        String[] result = texto.split("(?<=\\G.{" + cantCaracteres + "})");
+        String[] result = texto.split("(?<=\\G.{" + cantCaracteres + "}|\n)");
         char letra;
         int tiempo = 400;
         int k;
+        enviarDato("5");
         for (int j = 0; j < result.length; j++) { //Cuantos resultados hubo de la fracion en X caracteres                   
             //for (int i = 0; i < 2; i++) {
             for (int i = 0; i < 3; i++) {//Recorrido de cada punto de la letras en braille
@@ -247,7 +249,7 @@ public class Braille {
                             Thread.sleep(tiempo);
 
                             System.out.print(convierte(letra, i, 1) + " ");// punto de braille en la columna 1
-                            enviarDato(convierte(letra, i, 1));
+                            //enviarDato(convierte(letra, i, 1));
                             Thread.sleep(tiempo);
                         } else {
                             System.out.print(convierte(letra, i, 0)); //i es el punto en braille en la columna 0
@@ -265,16 +267,14 @@ public class Braille {
                     //}
                 }
                 System.out.println("prro");//Reglon de palabra (despues de todo el primer conjunto de puntos pasa al siguiente
-                if (this.ino != null) {
-                    try {
-                        enviarDato("2");
-                        Thread.sleep(tiempo);
-                    } catch (InterruptedException ex) {
-                        Logger.getLogger(Braille.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                }
+                try {
+                    enviarDato("2");
+                    Thread.sleep(tiempo);
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(Braille.class.getName()).log(Level.SEVERE, null, ex);
+                }                
                 if (i == 0) {
-                   try {
+                    try {
                         k = volverAtras(k, j, i + 1, result, tiempo);
                         System.out.println("prro");//Reglon de palabra (despues de todo el primer conjunto de puntos pasa al siguiente
                         enviarDato("2");
@@ -288,6 +288,7 @@ public class Braille {
             System.out.println("");//Renglon de conjunto de X caracteres
         }
         enviarDato("5");
+        System.out.println("RESET");
     }
 
     private int volverAtras(int k, int j, int i, String[] result, int tiempo) {
@@ -297,22 +298,21 @@ public class Braille {
                 letra = result[j].charAt(k); //En el renglon[j] leer el caracter numero K
                 if (Character.isDigit(letra)) {
                     System.out.print(convierteNumero(letra, i, 1));
-                    enviarDato(convierteNumero(letra, i, 1));
+                    //enviarDato(convierteNumero(letra, i, 1));
                     Thread.sleep(tiempo);
 
                     System.out.print(convierteNumero(letra, i, 0));
-                    enviarDato(convierteNumero(letra, i, 0));
+                    //enviarDato(convierteNumero(letra, i, 0));
                     Thread.sleep(tiempo);
-                    System.out.print(" ");
                 }
                 if (Character.isUpperCase(letra)) {
                     //Impresion del simbolo de mayuscula
                     System.out.print(convierteMayuscula(i, 0));
-                    enviarDato(convierteMayuscula(i, 0));
+                    //enviarDato(convierteMayuscula(i, 0));
                     Thread.sleep(tiempo);
 
                     System.out.print(convierteMayuscula(i, 1));
-                    enviarDato(convierteMayuscula(i, 1));
+                    //enviarDato(convierteMayuscula(i, 1));
                     Thread.sleep(tiempo);
 
                     System.out.print(" ");
@@ -320,19 +320,19 @@ public class Braille {
                     letra = Character.toLowerCase(letra);
 
                     System.out.print(convierte(letra, i, 1)); //i es el punto en braille en la columna 0
-                    enviarDato(convierte(letra, i, 1));
+                    //enviarDato(convierte(letra, i, 1));
                     Thread.sleep(tiempo);
 
                     System.out.print(convierte(letra, i, 0) + " ");// punto de braille en la columna 1
-                    enviarDato(convierte(letra, i, 0));
+                    //enviarDato(convierte(letra, i, 0));
                     Thread.sleep(tiempo);
                 } else {
                     System.out.print(convierte(letra, i, 1)); //i es el punto en braille en la columna 0
-                    enviarDato(convierte(letra, i, 1));
+                    //enviarDato(convierte(letra, i, 1));
                     Thread.sleep(tiempo);
 
                     System.out.print(convierte(letra, i, 0) + " ");// punto de braille en la columna 1
-                    enviarDato(convierte(letra, i, 0));
+                    //enviarDato(convierte(letra, i, 0));
                     Thread.sleep(tiempo);
                 }
             } catch (InterruptedException ex) {
@@ -575,21 +575,12 @@ public class Braille {
                 //System.out.println("Espacio ");
                 aux = espacio[row].charAt(col) + "";
                 break;
-            case '\n':
-                System.out.println("");
-                 {
-                    try {
-                        Thread.sleep(450);
-                        enviarDato("2");
-                        Thread.sleep(450);
-                        enviarDato("2");
-                        Thread.sleep(450);
-                        enviarDato("2");
-                    } catch (InterruptedException ex) {
-                        Logger.getLogger(Braille.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                }
-                break;
+            case '\n': //System.out.println("");
+            {
+                //System.out.println("SALTO DE LINEA");
+                //aux = espacio[row].charAt(col) + "";
+            }
+            break;
 
             default:
                 System.out.println("Caracter no reconocido: " + letra);

@@ -69,6 +69,7 @@ public final class Arduino extends PanamaHitek_Arduino {
     public void finalizarConexion() {
         try {
             Arduino.this.killArduinoConnection();
+            conexion = false;
         } catch (ArduinoException ex) {
             Logger.getLogger(Arduino.class
                     .getName()).log(Level.SEVERE, null, ex);

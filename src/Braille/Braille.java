@@ -196,7 +196,6 @@ public class Braille {
         "00"};//0
 
     private Arduino ino;
-    private int saltoLinea = 1;
 
     public Braille(Arduino ino) {
         this.ino = ino;

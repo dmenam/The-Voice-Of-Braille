@@ -288,16 +288,19 @@ public class Inicio extends JFrame {
         btnTipoLetra.setColor1(Color.WHITE); //Color superior
         btnTipoLetra.setColor2(Color.BLACK); //Color inferior
         btnTipoLetra.setColor3(Color.GRAY); //Color de borde
-        btnTipoLetra.setFont(new Font("Times New Roman", Font.PLAIN, 15));
+        //btnTipoLetra.setFont(new Font("Times New Roman", Font.PLAIN, 15));
+        btnTipoLetra.setFont(fontBraille.MyFont(Font.PLAIN, 15));
         btnTipoLetra.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (btnTipoLetra.getFont().equals(fontBraille.MyFont(Font.PLAIN, 15))) {
                     btnTipoLetra.setFont(new Font("Times New Roman", Font.PLAIN, 15));
-                    texto.setFont(new Font("Times New Roman", Font.PLAIN, 25));
-                } else {
-                    btnTipoLetra.setFont(fontBraille.MyFont(Font.PLAIN, 15));
                     texto.setFont(fontBraille.MyFont(Font.PLAIN, 25));
+                } else {                    
+                    
+                    btnTipoLetra.setFont(fontBraille.MyFont(Font.PLAIN, 15));
+                    texto.setFont(new Font("Times New Roman", Font.PLAIN, 25));
+                    
                 }
             }
         });

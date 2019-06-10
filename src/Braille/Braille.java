@@ -284,10 +284,7 @@ public class Braille {
                 }
             }
             System.out.println("");//Renglon de conjunto de X caracteres
-            
-            //enviarDato("2");//Saltos de linea
-            //enviarDato("2");
-            enviarDato("6");
+            enviarDato("6");//Enviar salto de linea
             
             enviarDato("5");//Reset
         }

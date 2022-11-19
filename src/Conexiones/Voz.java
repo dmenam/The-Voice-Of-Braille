@@ -12,7 +12,7 @@ import javax.swing.JOptionPane;
 public class Voz {
 
     private String ApiKEY;
-    private final String REGION_SERVICE = "westus";
+    private final String REGION_SERVICE = "eastus";
     private String resultado;
     private Inicio inicio;
 
@@ -23,7 +23,7 @@ public class Voz {
     public void iniciarDictado() {
         try {
             // Replace below with your own subscription key
-            ApiKEY = "5372829c80db4eeb8f34bc9a3fb99d32";
+            ApiKEY = "2753a0b968554a758e08abdf72fb2a4c";
             // Replace below with your own service region (e.g., "westus").
 
             int exitCode = 1;

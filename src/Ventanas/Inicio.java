@@ -7,7 +7,6 @@ import Braille.Braille;
 import Conexiones.Comandos_Voz;
 import Conexiones.LeerTTS;
 import Conexiones.Voz;
-import com.sun.javafx.geom.transform.CanTransformVec3d;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -16,8 +15,6 @@ import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ContainerEvent;
-import java.awt.event.ContainerListener;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
